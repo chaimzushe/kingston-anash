@@ -3,19 +3,42 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #3b82f6;       /* Blue */
+  --primary-dark: #2563eb;  /* Darker Blue */
+  --secondary: #8b5cf6;     /* Purple */
+  --accent: #f59e0b;        /* Amber */
+  --success: #10b981;       /* Emerald */
+  --warning: #f97316;       /* Orange */
+  --danger: #ef4444;        /* Red */
+  --gray-light: #f3f4f6;    /* Gray 100 */
+  --gray-medium: #9ca3af;   /* Gray 400 */
+  --gray-dark: #4b5563;     /* Gray 600 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f172a;    /* Slate 900 */
+    --foreground: #f1f5f9;    /* Slate 100 */
+    --primary: #3b82f6;       /* Blue */
+    --primary-dark: #1d4ed8;  /* Darker Blue */
+    --secondary: #a78bfa;     /* Purple */
+    --accent: #fbbf24;        /* Amber */
+    --success: #34d399;       /* Emerald */
+    --warning: #fb923c;       /* Orange */
+    --danger: #f87171;        /* Red */
+    --gray-light: #1e293b;    /* Slate 800 */
+    --gray-medium: #64748b;   /* Slate 500 */
+    --gray-dark: #cbd5e1;     /* Slate 300 */
   }
 }
 
@@ -23,4 +46,18 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom gradient backgrounds */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.bg-gradient-accent {
+  background: linear-gradient(135deg, var(--accent), var(--primary));
+}
+
+/* Subtle pattern overlay */
+.pattern-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
