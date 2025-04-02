@@ -9,7 +9,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: any) {
   const article = blogArticles.find((article) => article.id === params.id);
 
   if (!article) {
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default function BlogPostPage({ params }: { params: { id: string } }) {
+export default function BlogPostPage({ params }: any) {
   const article = blogArticles.find((article) => article.id === params.id);
 
   if (!article) {

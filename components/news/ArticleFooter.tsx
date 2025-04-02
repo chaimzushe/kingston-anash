@@ -15,12 +15,15 @@ const ArticleFooter: React.FC<ArticleFooterProps> = ({ author, sourceUrl, isExte
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
+  const linkClasses = "text-sm font-medium text-primary hover:text-secondary transition-colors duration-150";
+
   return (
     <div className="flex justify-between items-center">
       <span className="text-xs text-gray-500 dark:text-gray-400">By {author}</span>
       {isInsideLink ? (
         <button
-          className="text-sm font-medium text-primary hover:text-secondary transition-colors duration-150"
+          className={linkClasses}
           onClick={(e) => {
             e.stopPropagation();
             window.open(sourceUrl, '_blank', 'noopener,noreferrer');
@@ -28,24 +31,26 @@ const ArticleFooter: React.FC<ArticleFooterProps> = ({ author, sourceUrl, isExte
         >
           Read more →
         </button>
-      ) : isExternal ? (
-        <a
-          href={sourceUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-medium text-primary hover:text-secondary transition-colors duration-150"
-          onClick={handleClick}
-        >
-          Read more →
-        </a>
       ) : (
-        <Link
-          href={sourceUrl}
-          className="text-sm font-medium text-primary hover:text-secondary transition-colors duration-150"
-          onClick={handleClick}
-        >
-          Read more →
-        </Link>
+        <div onClick={handleClick}>
+          {isExternal ? (
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={linkClasses}
+            >
+              Read more →
+            </a>
+          ) : (
+            <Link
+              href={sourceUrl}
+              className={linkClasses}
+            >
+              Read more →
+            </Link>
+          )}
+        </div>
       )}
     </div>
   );
