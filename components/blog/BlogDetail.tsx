@@ -22,7 +22,7 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
       <div className="max-w-4xl mx-auto">
         {/* Back button */}
         <Link
-          href="/blog"
+          href="/"
           className="inline-flex items-center text-primary hover:text-secondary transition-colors duration-150 mb-4 sm:mb-8"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

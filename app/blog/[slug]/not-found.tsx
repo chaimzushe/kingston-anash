@@ -12,7 +12,7 @@ export default function NotFound() {
           Sorry, we couldn't find the blog post you were looking for.
         </p>
         <Link 
-          href="/blog" 
+          href="/" 
           className="px-6 py-3 bg-gradient-primary hover:opacity-90 text-white font-medium rounded-md shadow-md transition-all duration-200 hover:shadow-lg inline-block"
         >
           Back to Blog

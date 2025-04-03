@@ -46,20 +46,11 @@ const NewsArticle: React.FC<NewsArticleProps> = ({
 
   return (
     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-md rounded-lg transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px]">
-      {isExternalLink ? (
-        <a
-          href={sourceUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block h-full cursor-pointer"
-        >
-          <CardContent isWrappedInLink={true} />
-        </a>
-      ) : (
+ 
         <Link href={sourceUrl} className="block h-full cursor-pointer">
           <CardContent isWrappedInLink={false} />
         </Link>
-      )}
+
     </div>
   );
 };
