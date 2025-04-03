@@ -10,7 +10,6 @@ interface PageHeaderProps {
 const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle }) => {
   return (
     <div className="text-center my-12">
-      <div className="inline-block mb-4 px-6 py-1 bg-gradient-primary rounded-full text-white text-sm font-medium">Welcome</div>
       <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
         {title}
       </h1>

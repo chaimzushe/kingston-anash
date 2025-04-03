@@ -20,10 +20,10 @@ export const dropdownMenus: DropdownItem[] = [
   {
     label: 'Minyanim',
     items: [
-      { label: 'Bais Moshe', href: '#' },
-      { label: 'Cheder Sheni', href: '#' },
-      { label: 'Beis Tzvi Yosef', href: '#' },
-
+      { label: '770 Eastern Parkway', href: '/minyanim/770' },
+      { label: 'Kingston Avenue Shul', href: '/minyanim/kingston-avenue-shul' },
+      { label: 'Beis Rivkah', href: '/minyanim/beis-rivkah' },
+      { label: 'Oholei Torah', href: '/minyanim/oholei-torah' }
     ]
   }
 ];

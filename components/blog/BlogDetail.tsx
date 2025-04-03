@@ -3,83 +3,93 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { NewsArticle } from '../../data/newsArticles';
+import { format } from 'date-fns';
+import { Post } from '../../lib/api';
+import { urlFor } from '../../lib/sanity';
+import { PortableText } from '../../lib/portableText';
 
 interface BlogDetailProps {
-  article: NewsArticle;
+  post: Post;
 }
 
-const BlogDetail: React.FC<BlogDetailProps> = ({ article }) => {
+const BlogDetail: React.FC<BlogDetailProps> = ({ post }) => {
+  // Format the date
+  const formattedDate = post.publishedAt
+    ? format(new Date(post.publishedAt), 'MMMM dd, yyyy')
+    : '';
   return (
     <div className="min-h-screen py-6 px-4 sm:py-8 sm:px-6 lg:px-8 font-[family-name:var(--font-geist-sans)] pattern-overlay">
       <div className="max-w-4xl mx-auto">
         {/* Back button */}
         <Link
-          href="/"
+          href="/blog"
           className="inline-flex items-center text-primary hover:text-secondary transition-colors duration-150 mb-4 sm:mb-8"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
           </svg>
-          Back to Home
+          Back to Blog
         </Link>
 
         {/* Article header */}
         <div className="mb-6 sm:mb-8">
-          <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
-            <span className="bg-accent/20 dark:bg-accent/30 text-accent-700 dark:text-accent-200 px-3 py-1 rounded-full text-xs font-medium">
-              {article.category}
-            </span>
-            {article.tags && article.tags.map((tag, index) => (
-              <span key={index} className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-3 py-1 rounded-full text-xs">
-                {tag}
+          <div className="flex flex-wrap gap-2 mb-3">
+            {post.categories && post.categories.map((category, index) => (
+              <span
+                key={index}
+                className="bg-accent/20 dark:bg-accent/30 text-accent-700 dark:text-accent-200 px-2 py-1 rounded-full text-xs font-medium"
+              >
+                {category.title}
               </span>
             ))}
           </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
-            {article.title}
+            {post.title}
           </h1>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
             <div className="flex items-center">
-              {article.authorImageUrl && (
+              {post.author && post.author.image && (
                 <div className="relative w-10 h-10 rounded-full overflow-hidden mr-3">
                   <Image
-                    src={article.authorImageUrl}
-                    alt={article.author}
+                    src={urlFor(post.author.image).width(80).height(80).url()}
+                    alt={post.author.name}
                     fill
                     style={{ objectFit: 'cover' }}
                   />
                 </div>
               )}
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">{article.author}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{article.date}</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  {post.author ? post.author.name : 'Unknown Author'}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</p>
               </div>
             </div>
-            {article.readTime && (
+            {post.readTime && (
               <span className="text-sm text-gray-500 dark:text-gray-400 mt-1 sm:mt-0">
-                {article.readTime}
+                {post.readTime}
               </span>
             )}
           </div>
         </div>
 
         {/* Featured image */}
-        <div className="relative h-[250px] sm:h-[300px] md:h-[400px] w-full mb-6 sm:mb-8 rounded-lg overflow-hidden shadow-md">
-          <Image
-            src={article.imageUrl}
-            alt={article.title}
-            fill
-            priority
-            style={{ objectFit: 'cover' }}
-          />
-        </div>
+        {post.mainImage && (
+          <div className="relative h-[250px] sm:h-[300px] md:h-[400px] w-full mb-6 sm:mb-8 rounded-lg overflow-hidden shadow-md">
+            <Image
+              src={urlFor(post.mainImage).width(1200).height(800).url()}
+              alt={post.title}
+              fill
+              priority
+              style={{ objectFit: 'cover' }}
+            />
+          </div>
+        )}
 
         {/* Article content */}
-        <div
-          className="prose prose-sm sm:prose-base md:prose-lg max-w-none dark:prose-invert prose-headings:text-primary prose-a:text-secondary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg mb-8 sm:mb-12 prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-headings:leading-tight"
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
+        <div className="prose prose-sm sm:prose-base md:prose-lg max-w-none dark:prose-invert prose-headings:text-primary prose-a:text-secondary prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg mb-8 sm:mb-12 prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-headings:leading-tight">
+          {post.body && <PortableText content={post.body} />}
+        </div>
 
         {/* Article footer */}
         <div className="border-t border-gray-200 dark:border-gray-800 pt-6 sm:pt-8 mt-6 sm:mt-8">

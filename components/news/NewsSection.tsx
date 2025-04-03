@@ -11,6 +11,7 @@ interface NewsSectionProps {
 
 const NewsSection: React.FC<NewsSectionProps> = ({ articles }) => {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Extract unique categories from articles
   const categories = ['All', ...Array.from(new Set(articles.map(article => article.category)))];
@@ -32,25 +33,27 @@ const NewsSection: React.FC<NewsSectionProps> = ({ articles }) => {
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {filteredArticles.map((article) => (
-          <NewsArticle
-            key={article.id}
-            title={article.title}
-            summary={article.summary}
-            date={article.date}
-            author={article.author}
-            imageUrl={article.imageUrl}
-            sourceUrl={article.sourceUrl}
-            source={article.source}
-          />
-        ))}
+        {filteredArticles.length > 0 ? (
+          filteredArticles.map((article) => (
+            <NewsArticle
+              key={article.id}
+              title={article.title}
+              summary={article.summary}
+              date={article.date}
+              author={article.author}
+              imageUrl={article.imageUrl}
+              sourceUrl={article.sourceUrl}
+              source={article.source}
+            />
+          ))
+        ) : (
+          <div className="col-span-3 py-12 text-center">
+            <p className="text-gray-500 dark:text-gray-400">No articles found. Check back soon for updates!</p>
+          </div>
+        )}
       </div>
 
-      <div className="mt-10 text-center">
-        <button className="px-6 py-3 bg-gradient-primary hover:opacity-90 text-white font-medium rounded-md shadow-md transition-all duration-200 hover:shadow-lg">
-          Load More Articles
-        </button>
-      </div>
+      
     </div>
   );
 };
