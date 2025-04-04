@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy-cms": "cd cms/kingston-anash-cms && npm run deploy"
   },
   "dependencies": {
     "@portabletext/react": "^3.2.1",
