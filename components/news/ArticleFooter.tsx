@@ -21,17 +21,7 @@ const ArticleFooter: React.FC<ArticleFooterProps> = ({ author, sourceUrl, isExte
     <div className="flex justify-between items-center">
       <span className="text-xs text-gray-500 dark:text-gray-400">By {author}</span>
       <div onClick={handleClick}>
-        {isExternal ? (
-          <a
-            href={sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={linkClasses}
-            onClick={handleClick}
-          >
-            Read more →
-          </a>
-        ) : (
+       
           <Link
             href={sourceUrl}
             className={linkClasses}
@@ -39,7 +29,7 @@ const ArticleFooter: React.FC<ArticleFooterProps> = ({ author, sourceUrl, isExte
           >
             Read more →
           </Link>
-        )}
+        
       </div>
     </div>
   );
