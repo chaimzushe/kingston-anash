@@ -33,12 +33,12 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
 
       try {
         setPermission(Notification.permission);
-        
+
         const registration = await navigator.serviceWorker.ready;
         const subscription = await registration.pushManager.getSubscription();
-        
+
         setIsSubscribed(!!subscription);
-        
+
         if (subscription) {
           // Fetch categories for this subscription
           const response = await fetch('/api/push/get-categories', {
@@ -48,7 +48,7 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
             },
             body: JSON.stringify({ endpoint: subscription.endpoint }),
           });
-          
+
           if (response.ok) {
             const data = await response.json();
             setSelectedCategories(data.categories || []);
@@ -77,7 +77,7 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
       // Request permission
       const permission = await Notification.requestPermission();
       setPermission(permission);
-      
+
       if (permission !== 'granted') {
         setError('Permission for notifications was denied');
         setIsLoading(false);
@@ -90,17 +90,17 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
       }
 
       const registration = await navigator.serviceWorker.ready;
-      
+
       // Get the server's public key
       const response = await fetch('/api/push/vapid-public-key');
       const { publicKey } = await response.json();
-      
+
       // Subscribe the user
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(publicKey)
       });
-      
+
       // Send the subscription to the server
       const saveResponse = await fetch('/api/push/subscribe', {
         method: 'POST',
@@ -112,11 +112,11 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
           categories: selectedCategories
         }),
       });
-      
+
       if (!saveResponse.ok) {
         throw new Error('Failed to save subscription on server');
       }
-      
+
       setIsSubscribed(true);
       setIsLoading(false);
     } catch (err) {
@@ -134,7 +134,7 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
 
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
-      
+
       if (subscription) {
         // Send the unsubscribe request to the server
         const response = await fetch('/api/push/unsubscribe', {
@@ -146,15 +146,15 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
             endpoint: subscription.endpoint
           }),
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to unsubscribe on server');
         }
-        
+
         // Unsubscribe on the browser
         await subscription.unsubscribe();
       }
-      
+
       setIsSubscribed(false);
       setSelectedCategories([]);
       setIsLoading(false);
@@ -173,13 +173,13 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
 
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
-      
+
       if (!subscription) {
         setError('No active subscription found');
         setIsLoading(false);
         return;
       }
-      
+
       // Update categories on the server
       const response = await fetch('/api/push/update-categories', {
         method: 'POST',
@@ -191,11 +191,11 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
           categories: selectedCategories
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to update categories on server');
       }
-      
+
       setIsLoading(false);
     } catch (err) {
       console.error('Error updating categories:', err);
@@ -206,7 +206,7 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
 
   // Handle category selection
   const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategories(prev => 
+    setSelectedCategories(prev =>
       prev.includes(categoryId)
         ? prev.filter(id => id !== categoryId)
         : [...prev, categoryId]
@@ -219,14 +219,14 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
     const base64 = (base64String + padding)
       .replace(/-/g, '+')
       .replace(/_/g, '/');
-    
+
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
-    
+
     for (let i = 0; i < rawData.length; ++i) {
       outputArray[i] = rawData.charCodeAt(i);
     }
-    
+
     return outputArray;
   };
 
@@ -248,13 +248,13 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
       <p className="text-gray-600 dark:text-gray-300 mb-6">
         Get instant notifications on your device when new posts are published in your favorite categories.
       </p>
-      
+
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 mb-6">
           <p className="text-red-700 dark:text-red-300">{error}</p>
         </div>
       )}
-      
+
       {permission === 'denied' && (
         <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 mb-6">
           <p className="text-yellow-700 dark:text-yellow-300">
@@ -262,7 +262,7 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
           </p>
         </div>
       )}
-      
+
       {isSubscribed && (
         <div className="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 p-4 mb-6">
           <p className="text-green-700 dark:text-green-300">
@@ -270,33 +270,41 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
           </p>
         </div>
       )}
-      
+
       <div className="mb-6">
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Categories (Select which topics you want to be notified about)
         </label>
         <div className="space-y-2">
-          {categories.map((category) => (
-            <div key={category._id} className="flex items-center">
-              <input
-                id={`push-category-${category._id}`}
-                type="checkbox"
-                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                checked={selectedCategories.includes(category._id)}
-                onChange={() => handleCategoryChange(category._id)}
-                disabled={isLoading || (!isSubscribed && permission !== 'granted')}
-              />
-              <label
-                htmlFor={`push-category-${category._id}`}
-                className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
-              >
-                {category.title}
-              </label>
+          {categories && categories.length > 0 ? (
+            categories.map((category) => (
+              <div key={category._id} className="flex items-center">
+                <input
+                  id={`push-category-${category._id}`}
+                  type="checkbox"
+                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                  checked={selectedCategories.includes(category._id)}
+                  onChange={() => handleCategoryChange(category._id)}
+                  disabled={isLoading || (!isSubscribed && permission !== 'granted')}
+                />
+                <label
+                  htmlFor={`push-category-${category._id}`}
+                  className="ml-2 block text-sm text-gray-700 dark:text-gray-300"
+                >
+                  {category.title}
+                </label>
+              </div>
+            ))
+          ) : (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+              <p className="text-yellow-700 dark:text-yellow-300">
+                No categories found. Please add categories in the Sanity Studio first.
+              </p>
             </div>
-          ))}
+          )}
         </div>
       </div>
-      
+
       <div className="flex flex-col sm:flex-row gap-4">
         {!isSubscribed ? (
           <button
@@ -319,7 +327,7 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
             >
               {isLoading ? 'Updating...' : 'Update Preferences'}
             </button>
-            
+
             <button
               onClick={unsubscribeFromPush}
               disabled={isLoading}
@@ -332,7 +340,7 @@ const PushNotificationForm: React.FC<PushNotificationFormProps> = ({ categories 
           </>
         )}
       </div>
-      
+
       <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
         You can change your notification preferences or unsubscribe at any time.
       </p>

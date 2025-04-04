@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy-cms": "cd cms/kingston-anash-cms && npm run deploy"
+    "deploy-cms": "cd cms/kingston-anash-cms && npm run deploy",
+    "add-categories": "node scripts/add-sample-categories.js"
   },
   "dependencies": {
     "@portabletext/react": "^3.2.1",

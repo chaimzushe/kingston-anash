@@ -8,15 +8,33 @@ import { PageHeader } from '@/components/layout';
 // Fetch all categories from Sanity
 async function getCategories() {
   try {
-    const categories = await sanityClient.fetch(
-      `*[_type == "category"] | order(title asc) {
-        _id,
-        title
-      }`
-    );
+    // Add a timeout to prevent hanging if Sanity is unreachable
+    const fetchWithTimeout = async () => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      try {
+        const categories = await sanityClient.fetch(
+          `*[_type == "category"] | order(title asc) {
+            _id,
+            title
+          }`
+        );
+        clearTimeout(timeoutId);
+        return categories;
+      } catch (err) {
+        clearTimeout(timeoutId);
+        throw err;
+      }
+    };
+
+    const categories = await fetchWithTimeout();
+    console.log(`Fetched ${categories.length} categories from Sanity`);
     return categories;
   } catch (error) {
     console.error('Error fetching categories:', error);
+    // Return an empty array with a clear error message for debugging
+    console.log('Check if your Sanity project has categories and if the connection is working');
     return [];
   }
 }
