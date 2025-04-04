@@ -7,10 +7,9 @@ import { PageHeader } from '@/components/layout';
 async function unsubscribeUser(token: string) {
   try {
     // Find the subscription with the given token
-    const subscription = await sanityClient.fetch(
-      `*[_type == "subscription" && confirmationToken == $token && status == "active"][0]`,
-      { token }
-    );
+    // Use a different variable name in the query to avoid type issues
+    const query = `*[_type == "subscription" && confirmationToken == $tokenParam && status == "active"][0]`;
+    const subscription = await sanityClient.fetch(query, { tokenParam: token });
 
     if (!subscription) {
       return {
@@ -49,7 +48,7 @@ export default async function UnsubscribePage({ params }: any) {
   return (
     <div className="min-h-screen py-6 px-4 sm:py-8 sm:px-6 lg:px-8 font-[family-name:var(--font-geist-sans)] pattern-overlay">
       <div className="max-w-3xl mx-auto">
-        <PageHeader 
+        <PageHeader
           title="Unsubscribe"
           subtitle={result.success ? `You have been unsubscribed from notifications` : 'Unsubscribe from notifications'}
         />
@@ -69,8 +68,8 @@ export default async function UnsubscribePage({ params }: any) {
                 If you change your mind, you can always subscribe again.
               </p>
               <div className="pt-4">
-                <Link 
-                  href="/subscribe" 
+                <Link
+                  href="/subscribe"
                   className="inline-block px-4 py-2 bg-gradient-primary text-white font-medium rounded-md shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md"
                 >
                   Subscribe Again
@@ -91,8 +90,8 @@ export default async function UnsubscribePage({ params }: any) {
                 If you're still receiving notifications and wish to unsubscribe, please use the unsubscribe link in the most recent notification email.
               </p>
               <div className="pt-4">
-                <Link 
-                  href="/" 
+                <Link
+                  href="/"
                   className="inline-block px-4 py-2 bg-gradient-primary text-white font-medium rounded-md shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md"
                 >
                   Return to Home

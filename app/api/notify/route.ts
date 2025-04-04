@@ -21,13 +21,13 @@ export async function POST(request: NextRequest) {
 
     // Fetch the post with its categories
     const post = await sanityClient.fetch(
-      `*[_type == "post" && _id == $postId][0]{
+      `*[_type == "post" && _id == $postIdParam][0]{
         _id,
         title,
         slug,
         "categories": categories[]->._id
       }`,
-      { postId }
+      { postIdParam: postId }
     );
 
     if (!post) {
@@ -39,18 +39,18 @@ export async function POST(request: NextRequest) {
 
     // Find subscribers who are interested in the post's categories
     const subscribers = await sanityClient.fetch(
-      `*[_type == "subscription" && status == "active" && references(*[_type=="category" && _id in $categories]._id)]{
+      `*[_type == "subscription" && status == "active" && references(*[_type=="category" && _id in $categoriesParam]._id)]{
         _id,
         email,
         confirmationToken
       }`,
-      { categories: post.categories }
+      { categoriesParam: post.categories }
     );
 
     // In a real application, you would send emails to subscribers here
     // For now, we'll just log the subscribers
     console.log(`Notifying ${subscribers.length} subscribers about post: ${post.title}`);
-    
+
     subscribers.forEach((subscriber: any) => {
       console.log(`Would send email to: ${subscriber.email}`);
       // In a real app, you would use a service like SendGrid, Mailgun, etc.

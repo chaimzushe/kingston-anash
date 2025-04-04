@@ -23,8 +23,8 @@ export async function POST(request: NextRequest) {
 
     // Check if email already exists
     const existingSubscription = await sanityClient.fetch(
-      `*[_type == "subscription" && email == $email && status == "active"][0]`,
-      { email }
+      `*[_type == "subscription" && email == $emailParam && status == "active"][0]`,
+      { emailParam: email }
     );
 
     if (existingSubscription) {
