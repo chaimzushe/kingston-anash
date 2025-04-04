@@ -13,6 +13,7 @@ export interface DropdownItem {
 export const mainNavItems: NavItem[] = [
   { label: 'Community', href: '#' },
   { label: 'Events', href: '#' },
+  { label: 'Subscribe', href: '/subscribe' },
 ];
 
 // Dropdown menu items

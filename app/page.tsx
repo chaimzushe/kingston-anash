@@ -1,5 +1,6 @@
 import { NewsSection } from "../components/news";
 import { PageHeader } from "../components/layout";
+import SubscriptionCTA from "../components/subscription/SubscriptionCTA";
 import { getAllPosts } from "../lib/api";
 import { mapSanityPostsToNewsArticles } from "../lib/utils";
 
@@ -17,6 +18,9 @@ export default async function Home() {
 
         {/* News Articles Section */}
         <NewsSection articles={newsArticles} />
+
+        {/* Subscription CTA */}
+        <SubscriptionCTA />
       </div>
     </div>
   );
