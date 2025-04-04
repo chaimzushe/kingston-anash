@@ -42,7 +42,7 @@ async function unsubscribeUser(token: string) {
   }
 }
 
-export default async function UnsubscribePage({ params }: { params: { token: string } }) {
+export default async function UnsubscribePage({ params }: any) {
   const { token } = params;
   const result = await unsubscribeUser(token);
 
