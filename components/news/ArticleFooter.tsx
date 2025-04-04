@@ -33,23 +33,12 @@ const ArticleFooter: React.FC<ArticleFooterProps> = ({ author, sourceUrl, isExte
         </button>
       ) : (
         <div onClick={handleClick}>
-          {isExternal ? (
-            <a
-              href={sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={linkClasses}
-            >
-              Read more →
-            </a>
-          ) : (
             <Link
               href={sourceUrl}
               className={linkClasses}
             >
               Read more →
             </Link>
-          )}
         </div>
       )}
     </div>
