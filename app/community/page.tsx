@@ -69,12 +69,15 @@ export default async function CommunityPage() {
   const members = JSON.parse(JSON.stringify(membersData));
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 font-[family-name:var(--font-geist-sans)] pattern-overlay">
+    <div className="min-h-screen py-8 px-2 sm:px-6 lg:px-8 font-[family-name:var(--font-geist-sans)] pattern-overlay">
       <div className="max-w-7xl mx-auto">
-        <PageHeader
-          title="Kingston Anash Directory"
-          subtitle="Search and browse our community members"
-        />
+        {/* Page header - hidden on mobile when scrolled due to sticky search */}
+        <div className="md:block">
+          <PageHeader
+            title="Kingston Anash Directory"
+            subtitle="Search and browse our community members"
+          />
+        </div>
 
         <CommunityDirectory members={members} />
       </div>
