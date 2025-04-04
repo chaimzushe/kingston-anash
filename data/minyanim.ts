@@ -30,16 +30,16 @@ export const minyanim: Minyan[] = [
   {
     id: "bm",
     name: "Bais moshe",
-    address: "770 Eastern Parkway, Brooklyn, NY 11213",
+    address: "425 Tioga Ave, Kingston, PA 18704",
     imageUrl: "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    website: "https://www.770live.com",
-    phone: "(718) 493-9250",
-    rabbi: "Rabbi Yosef Braun",
+    website: "https://www.baismoshe.com/",
+    phone: "(570) 561-4555",
+    rabbi: "Rabbi Gedalia Oberlnader",
     shachris: {
-      sunday: "7:00 AM, 8:00 AM, 9:00 AM, 10:00 AM",
-      mondayToThursday: "7:00 AM, 8:00 AM, 9:30 AM",
-      friday: "7:00 AM, 8:00 AM, 9:30 AM",
-      shabbos: "9:30 AM"
+      sunday: "7:00 AM, 8:30 AM, 9:00 AM, 10:00 AM",
+      mondayToThursday: "7:00 AM, 7:15 AM, 8:15 AM",
+      friday: "7:00 AM, 7:15 AM, 8:15 AM",
+      shabbos: "10:00 AM"
     },
     mincha: {
       sunday: "1:45 PM, 3:15 PM (Winter), 7:00 PM (Summer)",
@@ -56,7 +56,7 @@ export const minyanim: Minyan[] = [
     shabbos: {
       candleLighting: "Varies by week - check bulletin",
       kabbalatShabbat: "Varies by week - check bulletin",
-      shachris: "9:30 AM",
+      shachris: "10:00 AM",
       mincha: "Varies by week - check bulletin",
       maariv: "Varies by week - check bulletin",
       havdalah: "Varies by week - check bulletin"
@@ -65,15 +65,15 @@ export const minyanim: Minyan[] = [
   {
     id: "cheder-sheni",
     name: "Cheder Sheni",
-    address: "470 Lefferts Avenue, Brooklyn, NY 11225",
+    address: "445 Wyoming Ave, Kingston, PA 18704",
     imageUrl: "https://images.unsplash.com/photo-1575384043001-f37b8e8a2b81?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
     phone: "(718) 735-0400",
-    rabbi: "Rabbi Yosef Katzman",
+    rabbi: "Rabbi Mendy Majesky",
     shachris: {
-      sunday: "8:30 AM",
-      mondayToThursday: "7:30 AM",
-      friday: "7:30 AM",
-      shabbos: "9:00 AM"
+      sunday: "8:00 AM",
+      mondayToThursday: "6:45 AM",
+      friday: "6:45 AM",
+      shabbos: "10:00 AM"
     },
     mincha: {
       sunday: "2:30 PM (Winter), 7:15 PM (Summer)",
