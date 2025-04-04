@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { sanityClient } from '@/lib/sanity';
+import { sanityClient, sanityWriteClient } from '@/lib/sanity';
 import { PageHeader } from '@/components/layout';
 
 // Unsubscribe a user based on their token
@@ -19,7 +19,7 @@ async function unsubscribeUser(token: string) {
     }
 
     // Update the subscription status to unsubscribed
-    await sanityClient
+    await sanityWriteClient
       .patch(subscription._id)
       .set({
         status: 'unsubscribed',

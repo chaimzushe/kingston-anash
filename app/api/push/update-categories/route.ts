@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sanityClient } from '@/lib/sanity';
+import { sanityClient, sanityWriteClient } from '@/lib/sanity';
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update the subscription categories
-    await sanityClient
+    await sanityWriteClient
       .patch(subscription._id)
       .set({
         categories: categories.map((id: string) => ({

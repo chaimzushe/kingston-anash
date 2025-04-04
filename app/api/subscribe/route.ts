@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sanityClient } from '@/lib/sanity';
-import { v4 as uuidv4 } from 'uuid';
+import { sanityClient, sanityWriteClient } from '@/lib/sanity';
+// Generate a simple random token instead of using uuid
+function generateToken() {
+  return Math.random().toString(36).substring(2, 15) +
+         Math.random().toString(36).substring(2, 15);
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     if (existingSubscription) {
       // Update existing subscription
-      await sanityClient
+      await sanityWriteClient
         .patch(existingSubscription._id)
         .set({
           categories: categories.map((id: string) => ({
@@ -46,10 +50,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Create confirmation token
-    const confirmationToken = uuidv4();
+    const confirmationToken = generateToken();
 
     // Create new subscription
-    const subscription = await sanityClient.create({
+    const subscription = await sanityWriteClient.create({
       _type: 'subscription',
       email,
       categories: categories.map((id: string) => ({
@@ -71,8 +75,18 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Subscription error:', error);
+
+    // More detailed error message
+    const errorMessage = error instanceof Error
+      ? `Error: ${error.message}`
+      : 'Unknown error occurred';
+
     return NextResponse.json(
-      { message: 'Failed to process subscription' },
+      {
+        message: 'Failed to process subscription',
+        error: errorMessage,
+        details: 'Check if you have proper write permissions to Sanity and that the schema is correctly set up.'
+      },
       { status: 500 }
     );
   }

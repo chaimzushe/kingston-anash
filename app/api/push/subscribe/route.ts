@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sanityClient } from '@/lib/sanity';
+import { sanityClient, sanityWriteClient } from '@/lib/sanity';
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     if (existingSubscription) {
       // Update existing subscription
-      await sanityClient
+      await sanityWriteClient
         .patch(existingSubscription._id)
         .set({
           categories: (categories || []).map((id: string) => ({
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new subscription
-    const newSubscription = await sanityClient.create({
+    const newSubscription = await sanityWriteClient.create({
       _type: 'pushSubscription',
       endpoint: subscription.endpoint,
       keys: {
@@ -58,8 +58,18 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Push subscription error:', error);
+
+    // More detailed error message
+    const errorMessage = error instanceof Error
+      ? `Error: ${error.message}`
+      : 'Unknown error occurred';
+
     return NextResponse.json(
-      { message: 'Failed to process push subscription' },
+      {
+        message: 'Failed to process push subscription',
+        error: errorMessage,
+        details: 'Check if you have proper write permissions to Sanity and that the pushSubscription schema is correctly set up.'
+      },
       { status: 500 }
     );
   }
