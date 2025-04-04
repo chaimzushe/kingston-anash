@@ -7,7 +7,7 @@ interface ArticleHeaderProps {
   source: string;
 }
 
-const ArticleHeader: React.FC<ArticleHeaderProps> = ({ date, source }) => {
+const ArticleHeader: React.FC<any> = ({ date, source }) => {
   return (
     <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
       <span>{date}</span>

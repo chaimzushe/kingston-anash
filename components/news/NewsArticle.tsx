@@ -17,7 +17,7 @@ interface NewsArticleProps {
   source: string;
 }
 
-const NewsArticle: React.FC<NewsArticleProps> = ({
+const NewsArticle: React.FC<any> = ({
   title,
   summary,
   date,

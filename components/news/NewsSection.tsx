@@ -43,7 +43,7 @@ const NewsSection: React.FC<NewsSectionProps> = ({ articles }) => {
               author={article.author}
               imageUrl={article.imageUrl}
               sourceUrl={article.sourceUrl}
-              source={article.source}
+              source={article.category}
             />
           ))
         ) : (
