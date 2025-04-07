@@ -15,7 +15,7 @@ const Navigation: React.FC = () => {
   };
 
   return (
-    <nav className="bg-gradient-primary text-white shadow-lg sticky top-0 z-50">
+    <nav className="bg-gradient-primary text-white shadow-md sticky top-0 z-50 backdrop-blur-sm bg-opacity-95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <NavLogo />

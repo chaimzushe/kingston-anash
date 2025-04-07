@@ -2,8 +2,8 @@ import React from 'react';
 import fs from 'fs';
 import path from 'path';
 import { parse } from 'csv-parse/sync';
-import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
+// import { redirect } from 'next/navigation'; // Uncomment when using authentication
+// import { cookies } from 'next/headers'; // Uncomment when using authentication
 import { PageHeader } from '../../components/layout';
 import CommunityDirectory from '../../components/community/CommunityDirectory';
 
@@ -67,9 +67,11 @@ export default async function CommunityPage() {
   // For now, we'll skip authentication checks since next-auth is not installed
   // In a real app, you would check authentication here
 
-  // Temporary: Check for a cookie to simulate authentication
+  // In a production environment, we would check for authentication
+  // For now, we'll allow access without authentication for development purposes
+  /*
   const cookieStore = cookies();
-  const isAuthenticated = cookieStore.has('authenticated');
+  const isAuthenticated = cookieStore.get('authenticated') !== undefined;
 
   // If not authenticated, redirect to sign in page
   if (!isAuthenticated) {
@@ -77,6 +79,7 @@ export default async function CommunityPage() {
     // In production, uncomment the next line
     // redirect('/auth/signin?callbackUrl=/community');
   }
+  */
 
   // Fetch community members from the CSV file
   const membersData = getAnashCsvData();

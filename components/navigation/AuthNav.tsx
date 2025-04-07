@@ -22,7 +22,7 @@ const AuthNav: React.FC = () => {
             </svg>
           </button>
 
-          <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 hidden group-hover:block border border-gray-100 dark:border-gray-700">
+          <div className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-md shadow-md py-1 z-10 hidden group-hover:block border border-white/10 dark:border-gray-700/50">
             <Link
               href="/community"
               className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -47,7 +47,7 @@ const AuthNav: React.FC = () => {
           </Link>
           <Link
             href="/auth/request-access"
-            className="bg-white text-primary hover:bg-amber-100 px-4 py-1.5 rounded-md transition-colors duration-150 font-medium shadow-sm"
+            className="text-white hover:text-amber-200 border border-white/30 hover:border-amber-200 px-3 py-1 rounded transition-all duration-150 font-medium"
           >
             Request Access
           </Link>

@@ -23,7 +23,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen }) => {
   const isSectionExpanded = (section: string) => expandedSections.includes(section);
 
   return (
-    <div className={`${isOpen ? 'block' : 'hidden'} md:hidden transition-all duration-300 ease-in-out bg-gradient-primary bg-opacity-95`}>
+    <div className={`${isOpen ? 'block' : 'hidden'} md:hidden transition-all duration-300 ease-in-out bg-gradient-primary bg-opacity-95 backdrop-blur-sm`}>
       <div className="px-4 py-4 space-y-4">
 
         {/* Render dropdown menus */}
@@ -123,7 +123,7 @@ const MobileAuthLinks: React.FC = () => {
       </Link>
       <Link
         href="/auth/request-access"
-        className="block py-3 px-4 text-lg font-medium bg-white text-primary hover:bg-amber-100 rounded-md transition-colors duration-150 mt-2"
+        className="block py-3 text-lg font-medium text-white hover:text-amber-200 border border-white/30 hover:border-amber-200 rounded transition-all duration-150 mt-3 text-center"
       >
         Request Access
       </Link>

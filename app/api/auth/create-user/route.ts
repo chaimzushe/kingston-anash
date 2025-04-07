@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 // import { hash } from 'bcrypt'; // Uncomment when bcrypt is installed
-import { cookies } from 'next/headers';
+// import { cookies } from 'next/headers'; // Uncomment when using authentication
 import { sanityClient, sanityWriteClient } from '@/lib/sanity';
 
 export async function POST(request: NextRequest) {
@@ -9,10 +9,12 @@ export async function POST(request: NextRequest) {
     // For now, we'll skip this check since next-auth is not installed
     // In a real app, you would check authentication here
 
-    // Temporary: Check for a cookie to simulate authentication
-    const cookieStore = cookies();
-    const isAdmin = cookieStore.has('admin');
+    // In a production environment, we would check for admin permissions
+    // For now, we'll allow all requests for development purposes
+    // const cookieStore = cookies();
+    // const isAdmin = cookieStore.get('admin')?.value === 'true';
 
+    /*
     if (!isAdmin) {
       // For development, we'll allow all requests
       // In production, uncomment the next lines
@@ -21,6 +23,7 @@ export async function POST(request: NextRequest) {
       //   { status: 401 }
       // );
     }
+    */
 
     const { name, email, password, isVerified = true } = await request.json();
 

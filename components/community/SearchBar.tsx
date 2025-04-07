@@ -46,11 +46,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           </svg>
         </button>
       )}
-      {showCount && (
-        <div className="text-xs text-center text-gray-500 mt-2">
-          Showing {filteredCount} of {totalCount} members
-        </div>
-      )}
+     
     </div>
   );
 };
