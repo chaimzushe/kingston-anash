@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     // In a real app, you would check authentication here
 
     // Temporary: Check for a cookie to simulate authentication
-    const cookieStore = cookies();
+    const cookieStore = cookies() as any;
     const isAdmin = cookieStore.has('admin');
 
     if (!isAdmin) {
