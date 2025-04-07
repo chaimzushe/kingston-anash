@@ -80,7 +80,7 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect, selectedDate, events 
         <button
           key={day}
           onClick={() => onDateSelect(date)}
-          className={`h-12 sm:h-14 md:h-16 w-full flex items-center justify-center relative rounded-md transition-all duration-200 ${
+          className={`h-12 sm:h-14 md:h-16 w-full flex items-center justify-center relative rounded-md transition-all duration-200 cursor-pointer ${
             isSelectedDate
               ? 'bg-primary text-white font-medium'
               : isTodayDate
@@ -117,13 +117,13 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect, selectedDate, events 
         <div className="flex space-x-2">
           <button
             onClick={prevMonth}
-            className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
           >
             <ChevronLeftIcon className="w-5 h-5" />
           </button>
           <button
             onClick={nextMonth}
-            className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            className="p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
           >
             <ChevronRightIcon className="w-5 h-5" />
           </button>

@@ -110,7 +110,7 @@ const MobileAuthLinks: React.FC = () => {
       </Link>
       <button
         onClick={handleSignOut}
-        className="block w-full text-left py-3 text-lg font-medium text-white hover:text-amber-200 transition-colors duration-150 mt-2"
+        className="block w-full text-left py-3 text-lg font-medium text-white hover:text-amber-200 transition-colors duration-150 mt-2 cursor-pointer"
       >
         Sign Out
       </button>

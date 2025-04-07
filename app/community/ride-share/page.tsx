@@ -129,7 +129,7 @@ export default function RideSharePage() {
                 setSelectedDate('');
                 setShowPastRides(false);
               }}
-              className="px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 focus:outline-none"
+              className="px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 focus:outline-none cursor-pointer"
             >
               Reset Filters
             </button>
@@ -144,7 +144,7 @@ export default function RideSharePage() {
         {/* Add New Ride Button */}
         <div className="mt-2 flex justify-end">
           <button
-            className="px-4 py-2 bg-primary text-white rounded-md shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            className="px-4 py-2 bg-primary text-white rounded-md shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary cursor-pointer"
           >
             Offer a Ride
           </button>

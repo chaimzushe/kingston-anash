@@ -165,7 +165,7 @@ export default function RequestAccess() {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className={`w-full px-4 py-2 bg-gradient-primary text-white font-medium rounded-md shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md ${
+                    className={`w-full px-4 py-2 bg-gradient-primary text-white font-medium rounded-md shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md cursor-pointer ${
                       isLoading ? 'opacity-70 cursor-not-allowed' : ''
                     }`}
                   >

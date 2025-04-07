@@ -20,7 +20,7 @@ const AuthNav: React.FC = () => {
   return (
     <div className="flex items-center">
       <div className="relative group">
-        <button className="flex items-center space-x-1 text-white hover:text-amber-200 transition-colors duration-150 font-medium">
+        <button className="flex items-center space-x-1 text-white hover:text-amber-200 transition-colors duration-150 font-medium cursor-pointer">
           <span>{user?.name || 'Account'}</span>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -36,7 +36,7 @@ const AuthNav: React.FC = () => {
           </Link>
           <button
             onClick={handleSignOut}
-            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
           >
             Sign Out
           </button>

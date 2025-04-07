@@ -107,7 +107,7 @@ export default function SignIn() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full px-4 py-2 bg-gradient-primary text-white font-medium rounded-md shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md ${
+                className={`w-full px-4 py-2 bg-gradient-primary text-white font-medium rounded-md shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md cursor-pointer ${
                   isLoading ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
@@ -122,7 +122,7 @@ export default function SignIn() {
             </p>
             <Link
               href="/auth/request-access"
-              className="block w-full py-3 px-4 bg-primary text-white text-center font-medium rounded-md shadow-md hover:bg-primary/90 transition-all duration-200 hover:shadow-lg"
+              className="block w-full py-3 px-4 bg-primary text-white text-center font-medium rounded-md shadow-md hover:bg-primary/90 transition-all duration-200 hover:shadow-lg cursor-pointer"
             >
               REQUEST ACCESS
             </Link>
