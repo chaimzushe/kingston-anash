@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navigation from "../components/navigation";
+import Navigation from "../components/Navigation";
 import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
 import { Providers } from "./providers";
 import CacheBuster from "../components/common/CacheBuster";
