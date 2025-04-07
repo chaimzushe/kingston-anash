@@ -38,7 +38,7 @@ export default function SignIn() {
       <div className="max-w-md mx-auto">
         <PageHeader
           title="Community Access"
-          subtitle="Sign in to access the community directory"
+          subtitle="Sign in to access the community features"
         />
 
         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mt-8">
@@ -97,8 +97,8 @@ export default function SignIn() {
               </div>
 
               <div className="text-sm">
-                <Link href="/auth/request-access" className="font-medium text-primary hover:text-secondary">
-                  Request Access
+                <Link href="/auth/forgot-password" className="font-medium text-primary hover:text-secondary">
+                  Forgot password?
                 </Link>
               </div>
             </div>
@@ -116,12 +116,18 @@ export default function SignIn() {
             </div>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Not a member yet?{' '}
-              <Link href="/auth/request-access" className="font-medium text-primary hover:text-secondary">
-                Request community access
-              </Link>
+          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-center font-medium text-gray-700 dark:text-gray-300 mb-4">
+              Not a member yet?
+            </p>
+            <Link
+              href="/auth/request-access"
+              className="block w-full py-3 px-4 bg-primary text-white text-center font-medium rounded-md shadow-md hover:bg-primary/90 transition-all duration-200 hover:shadow-lg"
+            >
+              REQUEST ACCESS
+            </Link>
+            <p className="mt-3 text-sm text-center text-gray-600 dark:text-gray-400">
+              Request access to join our community and use all features
             </p>
           </div>
         </div>

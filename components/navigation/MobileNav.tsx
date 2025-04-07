@@ -91,42 +91,29 @@ const MobileAuthLinks: React.FC = () => {
     await logout();
   };
 
-  if (isAuthenticated) {
-    return (
-      <div className="space-y-4">
-        <div className="text-white text-lg font-medium">
-          {user?.name || 'Account'}
-        </div>
-        <Link
-          href="/community"
-          className="block py-3 text-lg font-medium text-white hover:text-amber-200 transition-colors duration-150"
-        >
-          Community Directory
-        </Link>
-        <button
-          onClick={handleSignOut}
-          className="block w-full text-left py-3 text-lg font-medium text-white hover:text-amber-200 transition-colors duration-150 mt-2"
-        >
-          Sign Out
-        </button>
-      </div>
-    );
+  // If not authenticated, return an empty div
+  if (!isAuthenticated) {
+    return <div className="space-y-4"></div>;
   }
 
+  // If authenticated, show the user menu
   return (
     <div className="space-y-4">
+      <div className="text-white text-lg font-medium">
+        {user?.name || 'Account'}
+      </div>
       <Link
-        href="/auth/signin"
+        href="/community"
         className="block py-3 text-lg font-medium text-white hover:text-amber-200 transition-colors duration-150"
       >
-        Sign In
+        Community Directory
       </Link>
-      <Link
-        href="/auth/request-access"
-        className="block py-3 text-lg font-medium text-white hover:text-amber-200 border border-white/30 hover:border-amber-200 rounded transition-all duration-150 mt-3 text-center"
+      <button
+        onClick={handleSignOut}
+        className="block w-full text-left py-3 text-lg font-medium text-white hover:text-amber-200 transition-colors duration-150 mt-2"
       >
-        Request Access
-      </Link>
+        Sign Out
+      </button>
     </div>
   );
 };

@@ -11,13 +11,21 @@ export interface DropdownItem {
 
 // Main navigation items
 export const mainNavItems: NavItem[] = [
-  { label: 'Community', href: '/community' },
-  { label: 'Events', href: '#' },
   { label: 'Subscribe', href: '/subscribe' },
 ];
 
 // Dropdown menu items
 export const dropdownMenus: DropdownItem[] = [
+  {
+    label: 'Community',
+    items: [
+      { label: 'Directory', href: '/community' },
+      { label: 'Events', href: '/community/events' },
+      { label: 'Giveaways', href: '/community/giveaways' },
+      { label: 'Ride Share', href: '/community/ride-share' },
+      { label: 'Lashon Hara Chat', href: '/community/lashon-hara' }
+    ]
+  },
   {
     label: 'Minyanim',
     items: [

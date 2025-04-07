@@ -2,8 +2,7 @@ import React from 'react';
 import fs from 'fs';
 import path from 'path';
 import { parse } from 'csv-parse/sync';
-// import { redirect } from 'next/navigation'; // Uncomment when using authentication
-// import { cookies } from 'next/headers'; // Uncomment when using authentication
+import { redirect } from 'next/navigation';
 import { PageHeader } from '../../components/layout';
 import CommunityDirectory from '../../components/community/CommunityDirectory';
 
@@ -64,22 +63,17 @@ function getAnashCsvData(): AnashMember[] {
 }
 
 export default async function CommunityPage() {
-  // For now, we'll skip authentication checks since next-auth is not installed
-  // In a real app, you would check authentication here
+  // Check if user is authenticated
+  // For now, we're simulating authentication
+  // In a real app, you would use a proper authentication system like NextAuth.js
 
-  // In a production environment, we would check for authentication
-  // For now, we'll allow access without authentication for development purposes
-  /*
-  const cookieStore = cookies();
-  const isAuthenticated = cookieStore.get('authenticated') !== undefined;
+  // Simulate an unauthenticated user for demonstration
+  const isAuthenticated = false; // Set to true to bypass authentication check
 
   // If not authenticated, redirect to sign in page
   if (!isAuthenticated) {
-    // For now, we'll allow access without authentication
-    // In production, uncomment the next line
-    // redirect('/auth/signin?callbackUrl=/community');
+    redirect('/auth/signin?callbackUrl=/community');
   }
-  */
 
   // Fetch community members from the CSV file
   const membersData = getAnashCsvData();

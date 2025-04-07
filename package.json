@@ -10,6 +10,7 @@
     "add-categories": "node scripts/add-sample-categories.js"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@portabletext/react": "^3.2.1",
     "@sanity/image-url": "^1.1.0",
     "@types/uuid": "^10.0.0",
