@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy-cms": "cd cms/kingston-anash-cms && npm run deploy",
     "add-categories": "node scripts/add-sample-categories.js"
   },
   "dependencies": {

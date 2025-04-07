@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
 import { mainNavItems, dropdownMenus } from '../../data/navigationData';
 
 interface MobileNavProps {
@@ -71,7 +73,61 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen }) => {
             {item.label}
           </a>
         ))}
+
+        {/* Authentication Links */}
+        <div className="pt-4 mt-4">
+          <MobileAuthLinks />
+        </div>
       </div>
+    </div>
+  );
+};
+
+// Mobile Authentication Links Component
+const MobileAuthLinks: React.FC = () => {
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated';
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: true, callbackUrl: '/' });
+  };
+
+  if (isAuthenticated) {
+    return (
+      <div className="space-y-4">
+        <div className="text-white text-lg font-medium">
+          {session?.user?.name || 'Account'}
+        </div>
+        <Link
+          href="/community"
+          className="block py-3 text-lg font-medium text-white hover:text-amber-200 transition-colors duration-150"
+        >
+          Community Directory
+        </Link>
+        <button
+          onClick={handleSignOut}
+          className="block w-full text-left py-3 text-lg font-medium text-white hover:text-amber-200 transition-colors duration-150 mt-2"
+        >
+          Sign Out
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <Link
+        href="/auth/signin"
+        className="block py-3 text-lg font-medium text-white hover:text-amber-200 transition-colors duration-150"
+      >
+        Sign In
+      </Link>
+      <Link
+        href="/auth/request-access"
+        className="block py-3 px-4 text-lg font-medium bg-white text-primary hover:bg-amber-100 rounded-md transition-colors duration-150 mt-2"
+      >
+        Request Access
+      </Link>
     </div>
   );
 };

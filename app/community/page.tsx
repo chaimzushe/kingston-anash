@@ -2,6 +2,9 @@ import React from 'react';
 import fs from 'fs';
 import path from 'path';
 import { parse } from 'csv-parse/sync';
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 import { PageHeader } from '../../components/layout';
 import CommunityDirectory from '../../components/community/CommunityDirectory';
 
@@ -62,6 +65,34 @@ function getAnashCsvData(): AnashMember[] {
 }
 
 export default async function CommunityPage() {
+  // Check if user is authenticated
+  const session = await getServerSession(authOptions);
+
+  // If not authenticated, redirect to sign in page
+  if (!session) {
+    redirect('/auth/signin?callbackUrl=/community');
+  }
+
+  // If authenticated but not verified, show access denied
+  if (!session.user.isVerified) {
+    return (
+      <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 pattern-overlay">
+        <div className="max-w-4xl mx-auto">
+          <PageHeader
+            title="Access Denied"
+            subtitle="You need to be a verified community member to access this page"
+          />
+
+          <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 mt-8 rounded-r-lg">
+            <p className="text-red-700 dark:text-red-300">
+              Your account has not been verified yet. Please contact an administrator for verification.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Fetch community members from the CSV file
   const membersData = getAnashCsvData();
 
