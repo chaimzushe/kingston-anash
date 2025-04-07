@@ -13,23 +13,23 @@ export default function GiveawaysPage() {
   const { isAuthenticated } = useAuth();
 
   // Check authentication and redirect if not authenticated
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/auth/signin?callbackUrl=/community/giveaways');
-    }
-  }, [isAuthenticated, router]);
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     router.push('/auth/signin?callbackUrl=/community/giveaways');
+  //   }
+  // }, [isAuthenticated, router]);
 
-  // If not authenticated, show nothing while redirecting
-  if (!isAuthenticated) {
-    return null;
-  }
+  // // If not authenticated, show nothing while redirecting
+  // if (!isAuthenticated) {
+  //   return null;
+  // }
 
   // State for filter
   const [showAvailableOnly, setShowAvailableOnly] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [showFreeOnly, setShowFreeOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Get unique categories from giveaways
+  // Get unique categories from giveaways (for future use if needed)
   const categories = Array.from(new Set(dummyGiveaways.map(g => g.category)));
 
   // Filter giveaways based on state
@@ -39,8 +39,8 @@ export default function GiveawaysPage() {
       return false;
     }
 
-    // Filter by category
-    if (selectedCategory && giveaway.category !== selectedCategory) {
+    // Filter by price (free only)
+    if (showFreeOnly && !giveaway.isFree) {
       return false;
     }
 
@@ -50,6 +50,8 @@ export default function GiveawaysPage() {
       return (
         giveaway.title.toLowerCase().includes(query) ||
         giveaway.description.toLowerCase().includes(query) ||
+        giveaway.category.toLowerCase().includes(query) ||
+        giveaway.location.toLowerCase().includes(query) ||
         giveaway.tags?.some(tag => tag.toLowerCase().includes(query))
       );
     }
@@ -66,62 +68,56 @@ export default function GiveawaysPage() {
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 pattern-overlay">
       <div className="max-w-7xl mx-auto">
         <PageHeader
-          title="Community Giveaways"
-          subtitle="Browse items available for free from community members"
+          title="Community Marketplace"
+          subtitle="Browse items available from community members"
         />
 
         {/* Filters */}
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Search */}
-            <div>
-              <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Search
-              </label>
+          {/* Search */}
+          <div className="mb-4">
+            <div className="relative">
               <input
                 type="text"
                 id="search"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
-                placeholder="Search by title, description, or tags"
+                className="w-full px-4 py-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
+                placeholder="Search items by keyword..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
+                </svg>
+              </div>
             </div>
+          </div>
 
-            {/* Category Filter */}
-            <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Category
-              </label>
-              <select
-                id="category"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
-                value={selectedCategory || ''}
-                onChange={(e) => setSelectedCategory(e.target.value || null)}
-              >
-                <option value="">All Categories</option>
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {/* Filter options */}
+          <div className="flex flex-wrap gap-4">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded cursor-pointer"
+                checked={showAvailableOnly}
+                onChange={(e) => setShowAvailableOnly(e.target.checked)}
+              />
+              <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                Available items only
+              </span>
+            </label>
 
-            {/* Availability Filter */}
-            <div className="flex items-end">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                  checked={showAvailableOnly}
-                  onChange={(e) => setShowAvailableOnly(e.target.checked)}
-                />
-                <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                  Show available items only
-                </span>
-              </label>
-            </div>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded cursor-pointer"
+                checked={showFreeOnly}
+                onChange={(e) => setShowFreeOnly(e.target.checked)}
+              />
+              <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                Free items only
+              </span>
+            </label>
           </div>
         </div>
 

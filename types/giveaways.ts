@@ -11,5 +11,7 @@ export interface Giveaway {
   imageUrl?: string;
   postedDate: string; // ISO date string
   isAvailable: boolean;
+  price?: number; // Optional price in dollars
+  isFree: boolean; // Whether the item is free
   tags?: string[];
 }

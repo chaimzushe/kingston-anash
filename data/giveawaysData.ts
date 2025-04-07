@@ -7,7 +7,7 @@ const getRelativeDate = (dayOffset: number): string => {
   return date.toISOString();
 };
 
-// Create dummy giveaways data
+// Create dummy marketplace data (both free and for sale items)
 export const dummyGiveaways: Giveaway[] = [
   {
     id: '1',
@@ -22,7 +22,9 @@ export const dummyGiveaways: Giveaway[] = [
     imageUrl: 'https://images.unsplash.com/photo-1586683086816-c0d0fda82e7f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     postedDate: getRelativeDate(2),
     isAvailable: true,
-    tags: ['Furniture', 'Baby', 'Bedroom']
+    tags: ['Furniture', 'Baby', 'Bedroom'],
+    price: 0, // Free item
+    isFree: true
   },
   {
     id: '2',
@@ -35,7 +37,9 @@ export const dummyGiveaways: Giveaway[] = [
     contactPhone: '(845) 555-5678',
     postedDate: getRelativeDate(5),
     isAvailable: true,
-    tags: ['Clothing', 'Men', 'Winter']
+    tags: ['Clothing', 'Men', 'Winter'],
+    price: 25, // $25
+    isFree: false
   },
   {
     id: '3',
@@ -49,7 +53,9 @@ export const dummyGiveaways: Giveaway[] = [
     imageUrl: 'https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     postedDate: getRelativeDate(7),
     isAvailable: true,
-    tags: ['Furniture', 'Kitchen', 'Dining']
+    tags: ['Furniture', 'Kitchen', 'Dining'],
+    price: 75, // $75
+    isFree: false
   },
   {
     id: '4',
@@ -64,7 +70,9 @@ export const dummyGiveaways: Giveaway[] = [
     imageUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     postedDate: getRelativeDate(10),
     isAvailable: true,
-    tags: ['Books', 'Children', 'Education']
+    tags: ['Books', 'Children', 'Education'],
+    price: 0, // Free item
+    isFree: true
   },
   {
     id: '5',
@@ -77,7 +85,9 @@ export const dummyGiveaways: Giveaway[] = [
     contactPhone: '(845) 555-3456',
     postedDate: getRelativeDate(12),
     isAvailable: false, // Already taken
-    tags: ['Baby', 'Outdoor']
+    tags: ['Baby', 'Outdoor'],
+    price: 0, // Free item
+    isFree: true
   },
   {
     id: '6',
@@ -90,7 +100,9 @@ export const dummyGiveaways: Giveaway[] = [
     contactEmail: 'avi.s@example.com',
     postedDate: getRelativeDate(3),
     isAvailable: true,
-    tags: ['Electronics', 'Office', 'Lighting']
+    tags: ['Electronics', 'Office', 'Lighting'],
+    price: 10, // $10
+    isFree: false
   },
   {
     id: '7',
@@ -104,7 +116,9 @@ export const dummyGiveaways: Giveaway[] = [
     contactPhone: '(845) 555-7890',
     postedDate: getRelativeDate(4),
     isAvailable: true,
-    tags: ['Clothing', 'Women', 'Shabbat']
+    tags: ['Clothing', 'Women', 'Shabbat'],
+    price: 50, // $50
+    isFree: false
   },
   {
     id: '8',
@@ -118,7 +132,9 @@ export const dummyGiveaways: Giveaway[] = [
     imageUrl: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     postedDate: getRelativeDate(8),
     isAvailable: true,
-    tags: ['Appliances', 'Kitchen', 'Electronics']
+    tags: ['Appliances', 'Kitchen', 'Electronics'],
+    price: 0, // Free item
+    isFree: true
   },
   {
     id: '9',
@@ -132,7 +148,9 @@ export const dummyGiveaways: Giveaway[] = [
     imageUrl: 'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     postedDate: getRelativeDate(6),
     isAvailable: true,
-    tags: ['Sports', 'Children', 'Outdoor']
+    tags: ['Sports', 'Children', 'Outdoor'],
+    price: 30, // $30
+    isFree: false
   },
   {
     id: '10',
@@ -146,13 +164,25 @@ export const dummyGiveaways: Giveaway[] = [
     imageUrl: 'https://images.unsplash.com/photo-1594620302200-9a762244a156?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     postedDate: getRelativeDate(9),
     isAvailable: true,
-    tags: ['Furniture', 'Home', 'Storage']
+    tags: ['Furniture', 'Home', 'Storage'],
+    price: 0, // Free item
+    isFree: true
   }
 ];
 
-// Function to get all available giveaways
+// Function to get all available items
 export const getAvailableGiveaways = (): Giveaway[] => {
   return dummyGiveaways.filter(giveaway => giveaway.isAvailable);
+};
+
+// Function to get only free items
+export const getFreeItems = (): Giveaway[] => {
+  return dummyGiveaways.filter(giveaway => giveaway.isAvailable && giveaway.isFree);
+};
+
+// Function to get only items for sale
+export const getItemsForSale = (): Giveaway[] => {
+  return dummyGiveaways.filter(giveaway => giveaway.isAvailable && giveaway.price && giveaway.price > 0);
 };
 
 // Function to get a giveaway by ID

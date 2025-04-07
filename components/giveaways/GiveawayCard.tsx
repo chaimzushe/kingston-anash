@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { MapPinIcon, CalendarIcon, TagIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, CalendarIcon, TagIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { Giveaway } from '@/types/giveaways';
 
 interface GiveawayCardProps {
@@ -19,7 +19,7 @@ const GiveawayCard: React.FC<GiveawayCardProps> = ({ giveaway }) => {
       year: 'numeric'
     });
   };
-  
+
   // Get condition badge color
   const getConditionColor = (condition: string) => {
     switch (condition) {
@@ -37,7 +37,7 @@ const GiveawayCard: React.FC<GiveawayCardProps> = ({ giveaway }) => {
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300';
     }
   };
-  
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* Image */}
@@ -65,40 +65,53 @@ const GiveawayCard: React.FC<GiveawayCardProps> = ({ giveaway }) => {
           )}
         </div>
       )}
-      
+
       {/* Content */}
-      <div className="p-4">
+      <div className="p-4 relative">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white pr-16">
             {giveaway.title}
           </h3>
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getConditionColor(giveaway.condition)}`}>
             {giveaway.condition}
           </span>
         </div>
-        
+
+        {/* Price tag */}
+        <div className="absolute top-4 right-4">
+          {giveaway.price && giveaway.price > 0 ? (
+            <div className="bg-primary text-white px-3 py-1 rounded-full font-medium text-sm shadow-sm">
+              ${giveaway.price}
+            </div>
+          ) : (
+            <div className="bg-green-500 text-white px-3 py-1 rounded-full font-medium text-sm shadow-sm">
+              Free
+            </div>
+          )}
+        </div>
+
         <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
           {giveaway.description}
         </p>
-        
+
         <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
           <div className="flex items-center">
             <MapPinIcon className="w-4 h-4 mr-2 text-gray-400" />
             <span>{giveaway.location}</span>
           </div>
-          
+
           <div className="flex items-center">
             <CalendarIcon className="w-4 h-4 mr-2 text-gray-400" />
             <span>Posted {formatDate(giveaway.postedDate)}</span>
           </div>
-          
+
           {giveaway.tags && giveaway.tags.length > 0 && (
             <div className="flex items-start">
               <TagIcon className="w-4 h-4 mr-2 text-gray-400 mt-0.5" />
               <div className="flex flex-wrap gap-1">
                 {giveaway.tags.map((tag) => (
-                  <span 
-                    key={tag} 
+                  <span
+                    key={tag}
                     className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary"
                   >
                     {tag}
@@ -108,7 +121,7 @@ const GiveawayCard: React.FC<GiveawayCardProps> = ({ giveaway }) => {
             </div>
           )}
         </div>
-        
+
         {/* Contact Info */}
         {giveaway.isAvailable && (
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
