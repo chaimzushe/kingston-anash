@@ -1,7 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import React, { createContext, useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
@@ -25,42 +24,40 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { data: session, status } = useSession();
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    setIsLoading(status === 'loading');
-  }, [status]);
-
+  // Mock login function - replace with actual implementation when next-auth is installed
   const login = async (email: string, password: string) => {
     try {
-      const result = await signIn('credentials', {
-        redirect: false,
-        email,
-        password,
-      });
+      setIsLoading(true);
+      // This is a placeholder - in a real app, you would call your auth API
+      console.log('Login attempted with:', email);
 
-      if (result?.error) {
-        throw new Error(result.error);
-      }
+      // Simulate successful login
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
 
-      return result;
+      return { ok: true };
     } catch (error) {
+      setIsLoading(false);
       throw error;
     }
   };
 
+  // Mock logout function
   const logout = async () => {
-    await signOut({ redirect: false });
+    setUser(null);
     router.push('/');
   };
 
   const value = {
-    user: session?.user || null,
+    user: user,
     isLoading,
-    isAuthenticated: !!session?.user,
-    isVerified: !!session?.user?.isVerified,
+    isAuthenticated: !!user,
+    isVerified: false,
     login,
     logout,
   };

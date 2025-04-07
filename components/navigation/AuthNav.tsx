@@ -2,14 +2,13 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AuthNav: React.FC = () => {
-  const { data: session, status } = useSession();
-  const isAuthenticated = status === 'authenticated';
+  const { user, isAuthenticated, logout } = useAuth();
 
   const handleSignOut = async () => {
-    await signOut({ redirect: true, callbackUrl: '/' });
+    await logout();
   };
 
   return (
@@ -17,7 +16,7 @@ const AuthNav: React.FC = () => {
       {isAuthenticated ? (
         <div className="relative group">
           <button className="flex items-center space-x-1 text-white hover:text-amber-200 transition-colors duration-150 font-medium">
-            <span>{session?.user?.name || 'Account'}</span>
+            <span>{user?.name || 'Account'}</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>

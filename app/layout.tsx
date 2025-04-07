@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "../components/navigation";
 import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
 import { Providers } from "./providers";
+import CacheBuster from "../components/common/CacheBuster";
 
 
 const geistSans = Geist({
@@ -50,9 +51,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <ServiceWorkerRegistration />
-          <Navigation />
-          {children}
+          <CacheBuster>
+            <ServiceWorkerRegistration />
+            <Navigation />
+            {children}
+          </CacheBuster>
         </Providers>
       </body>
     </html>

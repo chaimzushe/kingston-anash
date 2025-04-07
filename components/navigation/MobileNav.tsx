@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
+import { useAuth } from '@/contexts/AuthContext';
 import { mainNavItems, dropdownMenus } from '../../data/navigationData';
 
 interface MobileNavProps {
@@ -85,18 +85,17 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen }) => {
 
 // Mobile Authentication Links Component
 const MobileAuthLinks: React.FC = () => {
-  const { data: session, status } = useSession();
-  const isAuthenticated = status === 'authenticated';
+  const { user, isAuthenticated, logout } = useAuth();
 
   const handleSignOut = async () => {
-    await signOut({ redirect: true, callbackUrl: '/' });
+    await logout();
   };
 
   if (isAuthenticated) {
     return (
       <div className="space-y-4">
         <div className="text-white text-lg font-medium">
-          {session?.user?.name || 'Account'}
+          {user?.name || 'Account'}
         </div>
         <Link
           href="/community"
