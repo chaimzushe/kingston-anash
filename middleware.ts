@@ -7,6 +7,7 @@ const publicRoutes = [
   '/about',
   '/contact',
   '/minyanim',
+  '/minyanim/(.*)', // Allow access to all minyanim pages
   '/community',
   '/community/(.*)',
   '/subscribe',

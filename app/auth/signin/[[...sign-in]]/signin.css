@@ -1,0 +1,11 @@
+/* Hide Clerk's header */
+.cl-headerTitle,
+.cl-headerSubtitle,
+.cl-internal-b3fm6y {
+  display: none !important;
+}
+
+/* Add some spacing at the top of the form */
+.cl-card {
+  padding-top: 0 !important;
+}
