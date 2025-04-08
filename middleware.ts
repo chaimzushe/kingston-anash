@@ -8,8 +8,7 @@ const publicRoutes = [
   '/contact',
   '/minyanim',
   '/minyanim/(.*)', // Allow access to all minyanim pages
-  '/community',
-  '/community/(.*)',
+  '/community', // Only the main community page is public
   '/subscribe',
   '/auth/request-access',
   '/auth/signin',
@@ -21,20 +20,49 @@ const publicRoutes = [
   '/images/(.*)',
 ];
 
+// Define protected community routes that require authentication
+const protectedCommunityRoutes = [
+  '/community/events',
+  '/community/directory',
+  '/community/ride-share',
+  '/community/giveaways',
+  '/community/lashon-horo',
+  '/profile',
+  '/api/community/members',
+];
+
 // Create a function to check if a route is public
 function isPublicRoute(path: string): boolean {
-  return publicRoutes.some(route => {
+  // First check if the path is in the protected routes list
+  for (const route of protectedCommunityRoutes) {
+    if (path === route || path.startsWith(`${route}/`)) {
+      console.log(`Protected route detected: ${path}`);
+      return false;
+    }
+  }
+
+  // Then check if it's in the public routes list
+  for (const route of publicRoutes) {
     if (route.endsWith('(.*)')) {
       const baseRoute = route.replace('(.*)', '');
-      return path.startsWith(baseRoute);
+      if (path === baseRoute || path.startsWith(`${baseRoute}/`)) {
+        console.log(`Public route detected: ${path}`);
+        return true;
+      }
+    } else if (path === route) {
+      console.log(`Public route detected: ${path}`);
+      return true;
     }
-    return path === route;
-  });
+  }
+
+  // If not explicitly public, treat as protected
+  console.log(`Default protected route: ${path}`);
+  return false;
 }
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  
+
   // If the route is public, just add cache headers
   if (isPublicRoute(path)) {
     const response = NextResponse.next();
@@ -43,12 +71,22 @@ export function middleware(request: NextRequest) {
     response.headers.set('Expires', '0');
     return response;
   }
-  
+
   // For protected routes, check if the user is authenticated
-  // This is a simplified version that doesn't use Clerk's middleware
-  // You can add your own authentication logic here
-  
-  // For now, we'll just allow all requests to proceed
+  // Check for Clerk's session token cookie
+  const hasClerkSession = request.cookies.has('__session') ||
+                         request.cookies.has('__clerk_db_jwt');
+
+  // If no session cookie is found, redirect to sign-in
+  if (!hasClerkSession) {
+    console.log(`Redirecting unauthenticated user from ${path} to sign-in`);
+    const signInUrl = new URL('/auth/signin', request.url);
+    signInUrl.searchParams.set('redirect_url', request.url);
+    return NextResponse.redirect(signInUrl);
+  }
+
+  // User has a session cookie, allow them to proceed
+  console.log(`Authenticated user accessing ${path}`);
   return NextResponse.next();
 }
 

@@ -1,31 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/layout';
 import Calendar from '@/components/events/Calendar';
 import EventList from '@/components/events/EventList';
 import EventCard from '@/components/events/EventCard';
 import { dummyEvents } from '@/data/eventsData';
 import { Event } from '@/types/events';
-import { useUser } from '@clerk/nextjs';
 
 export default function EventsPage() {
-  const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
-
-  // Check authentication and redirect if not authenticated
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/auth/signin?redirect_url=/community/events');
-    }
-  }, [isLoaded, isSignedIn, router]);
-
-  // If not authenticated, show nothing while redirecting
-  if (isLoaded && !isSignedIn) {
-    return null;
-  }
-
   // State for selected date (default to today)
   const [selectedDate, setSelectedDate] = useState(new Date());
   // State for filtered events

@@ -1,29 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/layout';
 import RideShareCard from '@/components/rideShare/RideShareCard';
 import { dummyRideShares } from '@/data/rideShareData';
 import { RideShare } from '@/types/rideShare';
-import { useUser } from '@clerk/nextjs';
 
 export default function RideSharePage() {
-  const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
-
-  // Check authentication and redirect if not authenticated
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/auth/signin?redirect_url=/community/ride-share');
-    }
-  }, [isLoaded, isSignedIn, router]);
-
-  // If not authenticated, show nothing while redirecting
-  if (isLoaded && !isSignedIn) {
-    return null;
-  }
-
   // State for filters
   const [destination, setDestination] = useState<string>('');
   const [showPastRides, setShowPastRides] = useState(false);

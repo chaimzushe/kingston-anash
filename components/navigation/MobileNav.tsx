@@ -110,7 +110,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
         ))}
 
         {/* Authentication Links */}
-    
+
           <MobileAuthLinks onClose={onClose} />
 
       </div>
@@ -130,7 +130,15 @@ const MobileAuthLinks: React.FC<MobileAuthLinksProps> = ({ onClose }) => {
   const handleSignOut = async () => {
     // Close the mobile menu if onClose is provided
     if (onClose) onClose();
-    await signOut();
+    try {
+      await signOut();
+      // Force a hard refresh to ensure all state is cleared
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error signing out:", error);
+      // If Clerk signOut fails, force a hard refresh anyway
+      window.location.href = "/";
+    }
   };
 
   // If not authenticated, return null

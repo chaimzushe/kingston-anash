@@ -1,29 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/layout';
 import GiveawayCard from '@/components/giveaways/GiveawayCard';
 import { dummyGiveaways } from '@/data/giveawaysData';
 import { Giveaway } from '@/types/giveaways';
-import { useUser } from '@clerk/nextjs';
 
 export default function GiveawaysPage() {
-  const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
-
-  // Check authentication and redirect if not authenticated
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/auth/signin?redirect_url=/community/giveaways');
-    }
-  }, [isLoaded, isSignedIn, router]);
-
-  // If not authenticated, show nothing while redirecting
-  if (isLoaded && !isSignedIn) {
-    return null;
-  }
-
   // State for filter
   const [showAvailableOnly, setShowAvailableOnly] = useState(true);
   const [showFreeOnly, setShowFreeOnly] = useState(false);

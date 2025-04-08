@@ -3,12 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { PageHeader } from "@/components/layout";
-import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { user, isLoaded, isSignedIn } = useUser();
   const { signOut } = useClerk();
-  const router = useRouter();
   const [status, setStatus] = useState("loading");
   const [statusMessage, setStatusMessage] = useState("Checking your account status...");
 
@@ -58,11 +56,12 @@ export default function ProfilePage() {
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.push("/");
+      // Force a hard refresh to ensure all state is cleared
+      window.location.href = "/";
     } catch (error) {
       console.error("Error signing out:", error);
-      // If Clerk signOut fails, try to redirect anyway
-      router.push("/");
+      // If Clerk signOut fails, force a hard refresh anyway
+      window.location.href = "/";
     }
   };
 
