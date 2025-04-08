@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { sanityClient } from '@/lib/sanity';
-import SubscriptionForm from '@/components/subscription/SubscriptionForm';
-import PushNotificationForm from '@/components/subscription/PushNotificationForm';
+import SubscriptionFormWrapper from '@/components/subscription/SubscriptionFormWrapper';
+import PushNotificationWrapper from '@/components/subscription/PushNotificationWrapper';
 import { PageHeader } from '@/components/layout';
 
 // Fetch all categories from Sanity
@@ -67,11 +67,8 @@ export default async function SubscribePage() {
         />
 
         <div className="mt-8 space-y-8">
-          <SubscriptionForm categories={categories} />
-
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
-            <PushNotificationForm categories={categories} />
-          </div>
+          <SubscriptionFormWrapper categories={categories} />
+          <PushNotificationWrapper categories={categories} />
         </div>
       </div>
     </div>
