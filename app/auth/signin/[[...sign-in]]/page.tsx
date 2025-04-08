@@ -7,21 +7,21 @@ import Link from "next/link";
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen py-8 sm:py-12 px-2 sm:px-6 lg:px-8 pattern-overlay">
+    <div className="min-h-screen py-8 sm:py-12 px-1 sm:px-6 lg:px-8 pattern-overlay">
       <div className="w-full sm:max-w-xl lg:max-w-2xl mx-auto">
         <PageHeader
           title="Sign In"
           subtitle="Welcome back to Kingston Anash"
         />
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-6 mt-4 sm:mt-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-2 sm:p-6 mt-4 sm:mt-8">
           <SignIn appearance={{
             elements: {
               formButtonPrimary:
                 "bg-gradient-primary text-white font-medium rounded-md transition-all duration-200 hover:opacity-90",
               card: "bg-transparent shadow-none",
               rootBox: "w-full",
-              formFieldInput: "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white",
+              formFieldInput: "w-full px-2 sm:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white",
               formButtonReset: "text-primary hover:text-primary-dark",
               card__innerHeader: "border-none hidden",
               card__innerFooter: "border-none",

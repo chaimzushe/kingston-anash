@@ -137,14 +137,11 @@ function RequestAccessForm() {
   };
 
   return (
-    <div className="min-h-screen py-8 sm:py-12 px-2 sm:px-6 lg:px-8 pattern-overlay">
+    <div className="min-h-screen py-8 sm:py-12 px-1 sm:px-6 lg:px-8 pattern-overlay">
       <div className="w-full sm:max-w-xl lg:max-w-2xl mx-auto">
-        <PageHeader
-          title="Request Community Access"
-          subtitle="Submit your information to request access to the community directory. Only administrators can approve new members."
-        />
+        {/* PageHeader is now in the parent component */}
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-6 mt-4 sm:mt-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-2 sm:p-6 mt-4 sm:mt-8">
           {status === 'success' ? (
             <div className="space-y-6">
               <div className="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 p-3 sm:p-4 rounded">
@@ -225,7 +222,7 @@ function RequestAccessForm() {
                       name="check-email"
                       type="email"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+                      className="w-full px-2 sm:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
                       placeholder="your@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -255,7 +252,7 @@ function RequestAccessForm() {
                     name="name"
                     type="text"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+                    className="w-full px-2 sm:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
                     placeholder="Your full name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -271,7 +268,7 @@ function RequestAccessForm() {
                     name="email"
                     type="email"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+                    className="w-full px-2 sm:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -286,7 +283,7 @@ function RequestAccessForm() {
                     id="phone"
                     name="phone"
                     type="tel"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+                    className="w-full px-2 sm:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
                     placeholder="(123) 456-7890"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
@@ -301,7 +298,7 @@ function RequestAccessForm() {
                     id="message"
                     name="message"
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
+                    className="w-full px-2 sm:px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-white"
                     placeholder="Tell us a bit about yourself and why you'd like access to the community directory"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -331,10 +328,14 @@ function RequestAccessForm() {
 // Main component that doesn't use useSearchParams directly
 export default function RequestAccess() {
   return (
-    <div className="min-h-screen py-8 sm:py-12 px-2 sm:px-6 lg:px-8 pattern-overlay">
+    <div className="min-h-screen py-8 sm:py-12 px-1 sm:px-6 lg:px-8 pattern-overlay">
       <div className="w-full sm:max-w-xl lg:max-w-2xl mx-auto">
-       
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-6 mt-4 sm:mt-8">
+        <PageHeader
+          title="Request Community Access"
+          subtitle="Join our community to access exclusive features and connect with other members."
+        />
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-2 sm:p-6 mt-4 sm:mt-8">
           <Suspense fallback={
             <div className="flex justify-center items-center py-8">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
