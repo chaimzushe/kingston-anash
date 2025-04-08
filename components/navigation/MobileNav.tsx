@@ -91,9 +91,9 @@ const MobileAuthLinks: React.FC = () => {
     await logout();
   };
 
-  // If not authenticated, return an empty div
+  // If not authenticated, return null
   if (!isAuthenticated) {
-    return <div className="space-y-4"></div>;
+    return null;
   }
 
   // If authenticated, show the user menu

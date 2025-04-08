@@ -15,14 +15,9 @@ const AuthNav: React.FC = () => {
     router.push('/');
   };
 
-  // Show loading state
-  if (!isLoaded) {
-    return <div className="h-8 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>;
-  }
-
-  // If not authenticated, return an empty div (no sign-in/sign-up buttons)
-  if (!isSignedIn) {
-    return <div></div>;
+  // If not loaded or not signed in, return an empty div
+  if (!isLoaded || !isSignedIn) {
+    return null;
   }
 
   // If authenticated, show the user menu
