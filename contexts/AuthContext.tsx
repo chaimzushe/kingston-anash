@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { identifyUser } from '../lib/logRocketUtils';
 
@@ -9,6 +9,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   isVerified: boolean;
+  isInitialized: boolean;
   login: (email: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
 }
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   isAuthenticated: false,
   isVerified: false,
+  isInitialized: false,
   login: async () => null,
   logout: async () => {},
 });
@@ -26,63 +28,112 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with loading true
+  const [isInitialized, setIsInitialized] = useState(false);
   const router = useRouter();
 
-  // Mock login function - replace with actual implementation when next-auth is installed
+  // Check for existing session when the component mounts
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/auth/session');
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+
+          // Identify the user in LogRocket if they're logged in
+          if (data.user) {
+            identifyUser(data.user._id, {
+              name: data.user.name,
+              email: data.user.email,
+              role: data.user.role
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to check session:', error);
+      } finally {
+        setIsLoading(false);
+        setIsInitialized(true);
+      }
+    };
+
+    checkSession();
+  }, []);
+
+  // Real login function that calls the API
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      // This is a placeholder - in a real app, you would call your auth API
-      console.log('Login attempted with:', email);
 
-      // Simulate successful login
-      setTimeout(() => {
-        // Create a mock user object
-        const mockUser = {
-          id: 'user-123',
-          email: email,
-          name: email.split('@')[0],
-          role: 'user'
-        };
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-        // Set the user in state
-        setUser(mockUser as any);
+      const data = await response.json();
 
-        // Identify the user in LogRocket
-        identifyUser(mockUser.id, {
-          name: mockUser.name,
-          email: mockUser.email,
-          role: mockUser.role
-        });
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
 
-        setIsLoading(false);
-      }, 1000);
+      // Set the user in state
+      setUser(data.user);
 
-      return { ok: true };
+      // Identify the user in LogRocket
+      identifyUser(data.user._id, {
+        name: data.user.name,
+        email: data.user.email,
+        role: data.user.role
+      });
+
+      return { ok: true, user: data.user };
     } catch (error) {
-      setIsLoading(false);
+      console.error('Login error:', error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Mock logout function
+  // Real logout function that calls the API
   const logout = async () => {
-    // Clear the user from state
-    setUser(null);
+    try {
+      setIsLoading(true);
 
-    // You could also reset the LogRocket identity here if needed
-    // by identifying with a generic ID
-    identifyUser('anonymous-user');
+      // Call the logout API
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-    router.push('/');
+      // Clear the user from state
+      setUser(null);
+
+      // Reset the LogRocket identity
+      identifyUser('anonymous-user');
+
+      // Redirect to home page
+      router.push('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const value = {
     user: user,
     isLoading,
     isAuthenticated: !!user,
-    isVerified: false,
+    isVerified: user ? user.isVerified : false,
+    isInitialized,
     login,
     logout,
   };

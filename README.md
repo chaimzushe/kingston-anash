@@ -1,4 +1,10 @@
+# Kingston Anash Website
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Development
+
+This project uses husky to run pre-commit and pre-push hooks. The pre-commit hook runs ESLint to check for code quality issues, and the pre-push hook runs the build to ensure the project builds successfully before pushing.
 
 ## Getting Started
 
