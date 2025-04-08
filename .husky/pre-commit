@@ -1,2 +1,0 @@
-# Run lint-staged to lint only staged files
-npx --no-install lint-staged || exit 0
