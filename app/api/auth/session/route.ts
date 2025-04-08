@@ -5,7 +5,7 @@ import { sanityClient } from '@/lib/sanity';
 export async function GET(request: NextRequest) {
   try {
     // Get the session token from cookies
-    const cookieStore = cookies();
+    const cookieStore =await cookies();
     const sessionToken = cookieStore.get('session_token')?.value;
 
     if (!sessionToken) {

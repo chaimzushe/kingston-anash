@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
     // Find the reset token in Sanity
     const resetToken = await sanityClient.fetch(
-      `*[_type == "passwordReset" && token == $token && used == false && dateTime(expiresAt) > dateTime(now())][0]{
+      `*[_type == "passwordReset" && token == $tokenParam && used == false && dateTime(expiresAt) > dateTime(now())][0]{
         _id,
         user->{
           _id,
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         },
         expiresAt
       }`,
-      { token }
+      { tokenParam: token }
     );
 
     if (!resetToken) {

@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
 
     // Get the access request
     const accessRequest = await sanityClient.fetch(
-      `*[_type == "accessRequest" && _id == $requestId][0]`,
-      { requestId }
+      `*[_type == "accessRequest" && _id == $requestIdParam][0]`,
+      { requestIdParam: requestId }
     );
 
     if (!accessRequest) {
@@ -71,8 +71,8 @@ export async function POST(request: NextRequest) {
 
       // Check if email already exists
       const existingUser = await sanityClient.fetch(
-        `*[_type == "user" && email == $emailParam][0]`,
-        { emailParam: accessRequest.email }
+        `*[_type == "user" && email == $userEmailParam][0]`,
+        { userEmailParam: accessRequest.email }
       );
 
       if (existingUser) {

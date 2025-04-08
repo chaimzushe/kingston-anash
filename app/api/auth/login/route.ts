@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { compare } from 'bcrypt';
 import { sanityClient } from '@/lib/sanity';
-import { cookies } from 'next/headers';
 import { v4 as uuidv4 } from 'uuid';
 
 // Session duration in seconds (7 days)
@@ -21,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     // Find user by email
     const user = await sanityClient.fetch(
-      `*[_type == "user" && email == $email][0]{
+      `*[_type == "user" && email == $emailParam][0]{
         _id,
         name,
         email,
@@ -29,7 +28,7 @@ export async function POST(request: NextRequest) {
         role,
         isVerified
       }`,
-      { email }
+      { emailParam: email }
     );
 
     // Check if user exists
@@ -51,7 +50,7 @@ export async function POST(request: NextRequest) {
     // Check if password is correct
     // For development, check if the password is stored in plain text
     let passwordCorrect = false;
-    
+
     if (user.password.startsWith('$2')) {
       // Password is hashed with bcrypt
       passwordCorrect = await compare(password, user.password);
@@ -67,12 +66,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // In a production app, you would store the session in a database
+    // For now, we'll just return the user data without the password
+    const { password: _, ...userWithoutPassword } = user;
+
     // Generate a session token
     const sessionToken = uuidv4();
-    
-    // Set session cookie
-    const cookieStore = cookies();
-    cookieStore.set({
+
+    // Create the response with the user data
+    const response = NextResponse.json({
+      message: 'Login successful',
+      user: userWithoutPassword,
+    });
+
+    // Set the cookie in the response
+    response.cookies.set({
       name: 'session_token',
       value: sessionToken,
       httpOnly: true,
@@ -81,14 +89,7 @@ export async function POST(request: NextRequest) {
       path: '/',
     });
 
-    // In a production app, you would store the session in a database
-    // For now, we'll just return the user data without the password
-    const { password: _, ...userWithoutPassword } = user;
-
-    return NextResponse.json({
-      message: 'Login successful',
-      user: userWithoutPassword,
-    });
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(

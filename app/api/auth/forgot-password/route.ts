@@ -19,13 +19,13 @@ export async function POST(request: NextRequest) {
 
     // Find user by email
     const user = await sanityClient.fetch(
-      `*[_type == "user" && email == $email][0]{
+      `*[_type == "user" && email == $emailParam][0]{
         _id,
         name,
         email,
         isVerified
       }`,
-      { email }
+      { emailParam: email }
     );
 
     // For security reasons, don't reveal if the user exists or not
