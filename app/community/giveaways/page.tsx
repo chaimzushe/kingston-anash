@@ -6,23 +6,23 @@ import { PageHeader } from '@/components/layout';
 import GiveawayCard from '@/components/giveaways/GiveawayCard';
 import { dummyGiveaways } from '@/data/giveawaysData';
 import { Giveaway } from '@/types/giveaways';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 
 export default function GiveawaysPage() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isSignedIn, isLoaded } = useUser();
 
   // Check authentication and redirect if not authenticated
-  // useEffect(() => {
-  //   if (!isAuthenticated) {
-  //     router.push('/auth/signin?callbackUrl=/community/giveaways');
-  //   }
-  // }, [isAuthenticated, router]);
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push('/auth/signin?redirect_url=/community/giveaways');
+    }
+  }, [isLoaded, isSignedIn, router]);
 
-  // // If not authenticated, show nothing while redirecting
-  // if (!isAuthenticated) {
-  //   return null;
-  // }
+  // If not authenticated, show nothing while redirecting
+  if (isLoaded && !isSignedIn) {
+    return null;
+  }
 
   // State for filter
   const [showAvailableOnly, setShowAvailableOnly] = useState(true);

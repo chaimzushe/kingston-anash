@@ -8,21 +8,21 @@ import EventList from '@/components/events/EventList';
 import EventCard from '@/components/events/EventCard';
 import { dummyEvents } from '@/data/eventsData';
 import { Event } from '@/types/events';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 
 export default function EventsPage() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isSignedIn, isLoaded } = useUser();
 
   // Check authentication and redirect if not authenticated
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/auth/signin?callbackUrl=/community/events');
+    if (isLoaded && !isSignedIn) {
+      router.push('/auth/signin?redirect_url=/community/events');
     }
-  }, [isAuthenticated, router]);
+  }, [isLoaded, isSignedIn, router]);
 
   // If not authenticated, show nothing while redirecting
-  if (!isAuthenticated) {
+  if (isLoaded && !isSignedIn) {
     return null;
   }
 

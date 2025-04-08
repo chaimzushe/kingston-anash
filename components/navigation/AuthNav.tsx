@@ -31,25 +31,25 @@ const AuthNav: React.FC = () => {
           </svg>
         </button>
 
-        <div className="absolute right-0 mt-2 w-48 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-md shadow-md py-1 z-10 hidden group-hover:block border border-white/10 dark:border-gray-700/50">
-          <Link
-            href="/profile"
-            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            Profile
-          </Link>
-          <Link
-            href="/community"
-            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-          >
-            Community Directory
-          </Link>
-          <button
-            onClick={handleSignOut}
-            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-          >
-            Sign Out
-          </button>
+        {/* Invisible padding element to prevent hover gap */}
+        <div className="absolute inset-x-0 h-2 bottom-0 transform translate-y-full"></div>
+
+        <div className="absolute right-0 top-full w-48 pt-2 z-10 hidden group-hover:block transition-all duration-200 ease-in-out">
+          <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-md shadow-md py-1 border border-white/10 dark:border-gray-700/50">
+            <Link
+              href="/profile"
+              className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              Profile
+            </Link>
+
+            <button
+              onClick={handleSignOut}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
     </div>

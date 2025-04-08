@@ -6,21 +6,21 @@ import { PageHeader } from '@/components/layout';
 import RideShareCard from '@/components/rideShare/RideShareCard';
 import { dummyRideShares } from '@/data/rideShareData';
 import { RideShare } from '@/types/rideShare';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 
 export default function RideSharePage() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isSignedIn, isLoaded } = useUser();
 
   // Check authentication and redirect if not authenticated
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/auth/signin?callbackUrl=/community/ride-share');
+    if (isLoaded && !isSignedIn) {
+      router.push('/auth/signin?redirect_url=/community/ride-share');
     }
-  }, [isAuthenticated, router]);
+  }, [isLoaded, isSignedIn, router]);
 
   // If not authenticated, show nothing while redirecting
-  if (!isAuthenticated) {
+  if (isLoaded && !isSignedIn) {
     return null;
   }
 

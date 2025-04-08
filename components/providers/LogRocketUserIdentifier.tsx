@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useUser } from '@clerk/nextjs';
 import { identifyUser } from '../../lib/logRocketUtils';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -10,29 +10,28 @@ import { v4 as uuidv4 } from 'uuid';
  * either with their actual user ID (if logged in) or with an anonymous ID.
  */
 export default function LogRocketUserIdentifier() {
-  const { user, isAuthenticated } = useAuth();
-  
+  const { user, isSignedIn } = useUser();
+
   useEffect(() => {
     // Function to get or create an anonymous ID
     const getAnonymousId = () => {
       // Try to get existing anonymous ID from localStorage
       let anonymousId = localStorage.getItem('anonymousId');
-      
+
       // If no ID exists, create a new one and store it
       if (!anonymousId) {
         anonymousId = `anonymous-${uuidv4()}`;
         localStorage.setItem('anonymousId', anonymousId);
       }
-      
+
       return anonymousId;
     };
-    
+
     // If user is authenticated, identify them with their user info
-    if (isAuthenticated && user) {
+    if (isSignedIn && user) {
       identifyUser(user.id, {
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        name: user.firstName || user.username,
+        email: user.primaryEmailAddress?.emailAddress,
         isAuthenticated: true
       });
     } else {
@@ -43,8 +42,8 @@ export default function LogRocketUserIdentifier() {
         isAnonymous: true
       });
     }
-  }, [user, isAuthenticated]);
-  
+  }, [user, isSignedIn]);
+
   // This component doesn't render anything
   return null;
 }

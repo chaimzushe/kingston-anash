@@ -62,18 +62,10 @@ function getAnashCsvData(): AnashMember[] {
   }
 }
 
-export default async function CommunityPage() {
-  // Check if user is authenticated
-  // For now, we're simulating authentication
-  // In a real app, you would use a proper authentication system like NextAuth.js
-
-  // Simulate an unauthenticated user for demonstration
-  const isAuthenticated = false; // Set to true to bypass authentication check
-
-  // If not authenticated, redirect to sign in page
-  if (!isAuthenticated) {
-    redirect('/auth/signin?callbackUrl=/community');
-  }
+export default function CommunityPage() {
+  // For now, we'll allow access to the community page without authentication
+  // In a real app, you would implement proper authentication checks
+  // This is a temporary solution to fix the currentUser import error
 
   // Fetch community members from the CSV file
   const membersData = getAnashCsvData();

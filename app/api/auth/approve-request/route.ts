@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
     */
 
-    const { requestId, approved, password } = await request.json();
+    const { requestId, approved } = await request.json();
 
     // Validate input
     if (!requestId) {
@@ -59,17 +59,9 @@ export async function POST(request: NextRequest) {
       })
       .commit();
 
-    // If approved, create a user account
+    // If approved, create a user account in Sanity (no need to create in Clerk as it already exists)
     if (approved) {
-      // Check if a password was provided
-      if (!password) {
-        return NextResponse.json(
-          { message: 'Password is required to create a user account' },
-          { status: 400 }
-        );
-      }
-
-      // Check if email already exists
+      // Check if email already exists in Sanity users
       const existingUser = await sanityClient.fetch(
         `*[_type == "user" && email == $userEmailParam][0]`,
         { userEmailParam: accessRequest.email }
@@ -77,30 +69,25 @@ export async function POST(request: NextRequest) {
 
       if (existingUser) {
         return NextResponse.json(
-          { message: 'A user with this email already exists' },
+          { message: 'A user with this email already exists in Sanity' },
           { status: 400 }
         );
       }
 
-      // Hash the password - temporarily using plain text for development
-      // In production, use bcrypt to hash the password
-      // const hashedPassword = await hash(password, 10);
-      const hashedPassword = password; // TEMPORARY - REMOVE IN PRODUCTION
-
-      // Create user
+      // Create user in Sanity
       const user = await sanityWriteClient.create({
         _type: 'user',
         name: accessRequest.name,
         email: accessRequest.email,
-        password: hashedPassword,
+        clerkUserId: accessRequest.clerkUserId,
         isVerified: true,
         role: 'member',
-        phone: accessRequest.phone,
+        phone: accessRequest.phone || '',
         joinedDate: new Date().toISOString(),
       });
 
       return NextResponse.json({
-        message: 'Access request approved and user account created',
+        message: 'Access request approved and user account created in Sanity',
         userId: user._id,
       });
     }

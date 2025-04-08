@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, email, phone, message } = await request.json();
+    const { name, email, phone, message, clerkUserId } = await request.json();
 
     // Validate input
     if (!name || !email) {
@@ -42,6 +42,7 @@ export async function POST(request: NextRequest) {
       email,
       phone,
       message,
+      clerkUserId,
       status: 'pending',
       createdAt: new Date().toISOString(),
     });

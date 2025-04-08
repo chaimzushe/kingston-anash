@@ -1,0 +1,32 @@
+/* Hide Clerk's header */
+.cl-headerTitle,
+.cl-headerSubtitle,
+.cl-internal-b3fm6y {
+  display: none !important;
+}
+
+/* Add some spacing at the top of the form */
+.cl-card {
+  padding-top: 0 !important;
+}
+
+/* Hide the "Sign up" text */
+.cl-headerTitle {
+  display: none !important;
+}
+
+/* Hide the "By continuing, you agree to our Terms of Service and Privacy Policy" text */
+.cl-footerAction {
+  display: none !important;
+}
+
+/* Make the form take up the full width */
+.cl-rootBox {
+  width: 100% !important;
+}
+
+/* Remove the box shadow */
+.cl-card {
+  box-shadow: none !important;
+  background-color: transparent !important;
+}

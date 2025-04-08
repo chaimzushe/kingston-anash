@@ -12,44 +12,45 @@ const publicRoutes = [
   '/community/(.*)',
   '/subscribe',
   '/auth/request-access',
+  '/auth/signin',
   '/api/public/(.*)',
   '/api/auth/request-access',
   '/api/auth/validate-email',
+  '/api/auth/verify-user',
   '/favicon.ico',
   '/images/(.*)',
 ];
 
-// Create a custom middleware that handles authentication and redirects
-export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-
-  // Check if the path is public
-  const isPublic = publicRoutes.some(route => {
+// Create a function to check if a route is public
+function isPublicRoute(path: string): boolean {
+  return publicRoutes.some(route => {
     if (route.endsWith('(.*)')) {
       const baseRoute = route.replace('(.*)', '');
       return path.startsWith(baseRoute);
     }
     return path === route;
   });
+}
 
-  // For public routes, just add cache headers
-  if (isPublic) {
+export function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+  
+  // If the route is public, just add cache headers
+  if (isPublicRoute(path)) {
     const response = NextResponse.next();
     response.headers.set('Cache-Control', 'no-store, max-age=0');
     response.headers.set('Pragma', 'no-cache');
     response.headers.set('Expires', '0');
     return response;
   }
-
-  // For protected routes, redirect to request-access if not authenticated
-  // Note: In a real implementation, you would check for authentication here
-  // For now, we'll just redirect all protected routes to request-access
-  const requestAccessUrl = new URL('/auth/request-access', request.url);
-  requestAccessUrl.searchParams.set('redirect_url', request.url);
-
-  return NextResponse.redirect(requestAccessUrl);
+  
+  // For protected routes, check if the user is authenticated
+  // This is a simplified version that doesn't use Clerk's middleware
+  // You can add your own authentication logic here
+  
+  // For now, we'll just allow all requests to proceed
+  return NextResponse.next();
 }
-
 
 // Run the middleware on all routes except static files and _next
 export const config = {
