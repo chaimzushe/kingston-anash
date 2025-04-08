@@ -3,6 +3,15 @@ import { sanityClient, sanityWriteClient } from '@/lib/sanity';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Sanity API token is available
+    if (!process.env.SANITY_API_TOKEN) {
+      console.error('SANITY_API_TOKEN is not defined in environment variables');
+      return NextResponse.json(
+        { message: 'Server configuration error: Missing API token' },
+        { status: 500 }
+      );
+    }
+
     const { name, email, phone, message } = await request.json();
 
     // Validate input
@@ -45,8 +54,14 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Access request error:', error);
+
+    // Provide more detailed error message for debugging
+    const errorMessage = error instanceof Error
+      ? `Failed to process access request: ${error.message}`
+      : 'Failed to process access request';
+
     return NextResponse.json(
-      { message: 'Failed to process access request' },
+      { message: errorMessage },
       { status: 500 }
     );
   }

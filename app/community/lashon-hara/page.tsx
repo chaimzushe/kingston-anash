@@ -43,9 +43,6 @@ export default function LashonHaraPage() {
               <p className="italic text-gray-700 dark:text-gray-300">
                 "Before you speak, ask yourself: Is it kind, is it necessary, is it true, does it improve the silence?"
               </p>
-              <p className="mt-2 text-right text-sm text-gray-600 dark:text-gray-400">
-                — Shirdi Sai Baba
-              </p>
             </div>
             <div className="space-y-4">
               <h3 className="font-medium text-gray-900 dark:text-white">Instead, why not try:</h3>
@@ -99,7 +96,7 @@ export default function LashonHaraPage() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
-                    placeholder="e.g., SecretWhisperer123"
+                    placeholder="e.g. 770 gabboim anonymous"
                     required
                   />
                 </div>
