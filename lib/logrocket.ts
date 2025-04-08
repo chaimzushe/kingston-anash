@@ -4,26 +4,56 @@ import LogRocket from 'logrocket';
 export const initLogRocket = () => {
   const appId = process.env.NEXT_PUBLIC_LOGROCKET_APP_ID;
 
-  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production' && appId) {
-    LogRocket.init(appId);
+  // Initialize in both production and development
+  if (typeof window !== 'undefined' && appId) {
+    // Initialize LogRocket with advanced options
+    LogRocket.init(appId, {
+      release: process.env.NEXT_PUBLIC_APP_VERSION || 'development',
+      console: {
+        isEnabled: true,
+        shouldAggregateConsoleErrors: true,
+      },
+      network: {
+        isEnabled: true,
+        requestSanitizer: (request) => {
+          // Sanitize sensitive data from requests if needed
+          return request;
+        },
+      },
+      dom: {
+        isEnabled: true,
+        inputSanitizer: true, // Automatically sanitize user inputs
+      },
+    });
+
+    // Default site identification
     LogRocket.identify('Kingston anash', {
       name: 'kingston anash',
+      environment: process.env.NODE_ENV || 'development',
     });
+
     // Add global error tracking
     setupErrorTracking();
 
-    // You can add custom user identification
-    // LogRocket.identify('user-id', {
-    //   name: 'User Name',
-    //   email: 'user@example.com',
-    //   // Add any other user traits you want to track
-    // });
+    // Log initial page view
+    logPageView(window.location.pathname + window.location.search);
 
-    console.log('LogRocket initialized');
-  } else if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+    console.log(`LogRocket initialized in ${process.env.NODE_ENV} mode`);
+  } else if (typeof window !== 'undefined') {
     console.log('LogRocket would initialize with app ID:', appId || 'not set');
   }
 };
+
+// Log page views
+export function logPageView(url: string) {
+  if (typeof window !== 'undefined') {
+    LogRocket.track('page_view', {
+      url,
+      referrer: document.referrer,
+      title: document.title,
+    });
+  }
+}
 
 // Set up global error tracking
 function setupErrorTracking() {

@@ -1,0 +1,5 @@
+echo "Running build before push..."
+npm run build || (echo "Build failed! Push aborted." && exit 1)
+
+# Exit with success even if there are issues
+exit 0

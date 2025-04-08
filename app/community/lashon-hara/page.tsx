@@ -41,7 +41,10 @@ export default function LashonHaraPage() {
             </p>
             <div className="mb-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
               <p className="italic text-gray-700 dark:text-gray-300">
-                "Before you speak, ask yourself: Is it kind, is it necessary, is it true, does it improve the silence?"
+              "If a person would realize how severe the punishment is for speaking lashon hara, and how great the reward is for holding back from it — even at great personal cost — he would remain silent his whole life."
+              </p>
+              <p className="mt-2 text-right text-sm text-gray-600 dark:text-gray-400">
+                — Chofetz Chaim, Introduction and Laws of Lashon Hara
               </p>
             </div>
             <div className="space-y-4">
