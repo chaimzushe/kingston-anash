@@ -8,4 +8,36 @@
 /* Add some spacing at the top of the form */
 .cl-card {
   padding-top: 0 !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+/* Make the form wider on desktop */
+@media (min-width: 640px) {
+  .cl-rootBox {
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+  }
+
+  .cl-card {
+    width: 100% !important;
+  }
+
+  .cl-form {
+    width: 100% !important;
+  }
+}
+
+/* Center the form elements */
+.cl-formButtonPrimary,
+.cl-formFieldInput {
+  width: 100% !important;
+}
+
+/* Ensure the form is centered */
+.cl-rootBox {
+  display: flex !important;
+  justify-content: center !important;
+  width: 100% !important;
 }

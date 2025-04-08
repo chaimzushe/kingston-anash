@@ -1,12 +1,25 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/layout';
 import RideShareCard from '@/components/rideShare/RideShareCard';
 import { dummyRideShares } from '@/data/rideShareData';
 import { RideShare } from '@/types/rideShare';
+import { useUser } from '@clerk/nextjs';
 
 export default function RideSharePage() {
+  const router = useRouter();
+  const { isSignedIn, isLoaded } = useUser();
+
+  // Client-side authentication check as a backup
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      console.log('User not signed in, redirecting to sign-in page');
+      router.push('/auth/signin?redirect_url=/community/ride-share');
+    }
+  }, [isLoaded, isSignedIn, router]);
+
   // State for filters
   const [destination, setDestination] = useState<string>('');
   const [showPastRides, setShowPastRides] = useState(false);
@@ -42,6 +55,38 @@ export default function RideSharePage() {
   const sortedRides = [...filteredRides].sort((a, b) => {
     return new Date(a.departureDate).getTime() - new Date(b.departureDate).getTime();
   });
+
+  // If still loading authentication status, show loading spinner
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authenticated, show a message
+  if (!isSignedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="bg-red-100 text-red-700 p-4 rounded-lg mb-4">
+            <p className="font-bold">Authentication Required</p>
+            <p>You need to be signed in to access this page.</p>
+          </div>
+          <a
+            href="/auth/signin?redirect_url=/community/ride-share"
+            className="mt-4 inline-block px-6 py-3 bg-primary text-white rounded-md"
+          >
+            Sign In
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 pattern-overlay">
