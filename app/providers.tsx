@@ -1,14 +1,14 @@
 "use client";
 
-import { AuthProvider } from "@/contexts/AuthContext";
+import { ClerkProvider } from "@clerk/nextjs";
 import LogRocketProvider from "../components/providers/LogRocketProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider>
+    <ClerkProvider>
       <LogRocketProvider>
         {children}
       </LogRocketProvider>
-    </AuthProvider>
+    </ClerkProvider>
   );
 }
