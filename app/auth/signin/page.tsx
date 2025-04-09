@@ -7,47 +7,56 @@ import { PageHeader } from "@/components/layout";
 import "./signin.css";
 
 export default function SignInPage() {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoaded, isSignedIn } = useUser();
   const [isVerified, setIsVerified] = useState<boolean | null>(null);
   const [isPending, setIsPending] = useState<boolean>(false);
   const [isChecking, setIsChecking] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Check if the user is in Sanity when they sign in with Clerk
+  // Check if the user has the member role in Clerk and handle redirect
   useEffect(() => {
-    const verifyUserInSanity = async () => {
-      if (isLoaded && isSignedIn && user?.primaryEmailAddress) {
+    const checkUserRoleAndRedirect = async () => {
+      // Get the redirect URL from the query parameters
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get('redirect_url');
+
+      if (isLoaded && isSignedIn) {
         setIsChecking(true);
         try {
-          const response = await fetch('/api/auth/verify-user', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: user.primaryEmailAddress.emailAddress }),
-          });
-
+          const response = await fetch('/api/auth/check-role');
           const data = await response.json();
 
-          if (data.isVerified) {
+          if (data.authorized) {
             setIsVerified(true);
+            setIsPending(false);
+
+            // If there's a redirect URL and the user is authorized, redirect them
+            if (redirectUrl) {
+              window.location.href = redirectUrl;
+              return;
+            }
+          } else if (data.status === 'pending') {
+            setIsVerified(false);
+            setIsPending(true);
+            setErrorMessage("Your membership request is pending approval. You'll receive an email when your access is granted.");
           } else {
             setIsVerified(false);
-            setIsPending(!!data.isPending);
-            setErrorMessage(data.message || "Your email is not authorized to access this site. Please request access.");
+            setIsPending(false);
+            setErrorMessage("Your account does not have access to community features. Please request access below.");
           }
         } catch (error) {
-          console.error("Error verifying user:", error);
-          setErrorMessage("Failed to verify your account. Please try again later.");
+          console.error("Error checking user role:", error);
           setIsVerified(false);
+          setIsPending(false);
+          setErrorMessage("There was an error verifying your account. Please try again later.");
         } finally {
           setIsChecking(false);
         }
       }
     };
 
-    verifyUserInSanity();
-  }, [isLoaded, isSignedIn, user]);
+    checkUserRoleAndRedirect();
+  }, [isLoaded, isSignedIn]);
 
   return (
     <div className="min-h-screen py-8 sm:py-12 px-4 sm:px-6 lg:px-8 pattern-overlay flex justify-center items-start">
@@ -107,8 +116,14 @@ export default function SignInPage() {
                       alert: "shadow-none border border-gray-200 dark:border-gray-700",
                       headerTitle: "hidden",
                       headerSubtitle: "hidden",
+                      footerAction: "hidden",
+                      footerActionLink: "hidden",
+                      footer: "hidden",
                     }
                   }}
+                  path="/auth/signin"
+                  routing="path"
+                  signUpUrl=""
                 />
               </div>
 
@@ -119,13 +134,13 @@ export default function SignInPage() {
                     Not a community member yet?
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Request access to join our community and use all features
+                    Send an email to request access to our community
                   </p>
                   <a
-                    href="/auth/request-access"
+                    href="mailto:chaimzushe@gmail.com?subject=Kingston%20Anash%20Access%20Request&body=Hello,%0A%0AI%20would%20like%20to%20request%20access%20to%20the%20Kingston%20Anash%20community%20website.%0A%0AName:%20%0AEmail:%20%0APhone:%20%0A%0AThank%20you."
                     className="block w-full py-3 px-4 bg-primary text-white text-center font-medium rounded-md hover:bg-primary/90 transition-all duration-200 cursor-pointer border-0 shadow-sm"
                   >
-                    REQUEST ACCESS
+                    EMAIL REQUEST
                   </a>
                 </div>
               </div>

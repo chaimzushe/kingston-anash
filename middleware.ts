@@ -10,7 +10,7 @@ const PROTECTED_ROUTES = [
   '/community/lashon-horo',
   '/profile',
   '/api/community/members',
-  '/events', // Add the events redirect page
+  '/events',
 ];
 
 export function middleware(request: NextRequest) {
@@ -26,20 +26,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // For protected routes, check for authentication
-  const authCookie = request.cookies.get('__session') || request.cookies.get('__clerk_db_jwt');
-
-  // If no auth cookie is found, redirect to sign-in
-  if (!authCookie) {
-    console.log(`[Middleware] Redirecting unauthenticated user from ${pathname} to sign-in`);
-    const signInUrl = new URL('/auth/signin', request.url);
-    signInUrl.searchParams.set('redirect_url', request.url);
-    return NextResponse.redirect(signInUrl);
-  }
-
-  // User has an auth cookie, allow them to proceed
-  console.log(`[Middleware] Authenticated user accessing ${pathname}`);
-  return NextResponse.next();
+  // For protected routes, redirect to sign-in
+  // We'll let the sign-in page handle the authentication check
+  const signInUrl = new URL('/auth/signin', request.url);
+  signInUrl.searchParams.set('redirect_url', request.url);
+  return NextResponse.redirect(signInUrl);
 }
 
 // Configure the middleware to run on all routes except static files

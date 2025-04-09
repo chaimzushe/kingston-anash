@@ -16,42 +16,33 @@ export default function ProfilePage() {
   useEffect(() => {
     const checkUserStatus = async () => {
       // Only check status if user is signed in and we haven't checked yet
-      if (isLoaded && isSignedIn && user?.primaryEmailAddress && !hasCheckedStatus.current) {
+      if (isLoaded && isSignedIn && !hasCheckedStatus.current) {
         hasCheckedStatus.current = true;
-        console.log('Checking user status...');
+        console.log('Checking user status from Clerk metadata...');
 
         try {
-          // Try the API call
-          const response = await fetch("/api/auth/verify-user", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: user.primaryEmailAddress.emailAddress,
-            }),
-          });
+          // Get user role from Clerk metadata via our API
+          const response = await fetch("/api/auth/check-role");
 
           if (response.ok) {
             const data = await response.json();
             setStatus(data.status || "unauthorized");
             setStatusMessage(data.message || "Unknown status");
           } else {
-            // If API call fails, set a default status for demo
-            setStatus("approved");
-            setStatusMessage("Your account is approved and has full access to community features.");
+            // If API call fails, set unauthorized status
+            setStatus("unauthorized");
+            setStatusMessage("Unable to verify your account status. Please try again later.");
           }
         } catch (error) {
           console.error("Error checking user status:", error);
-          // If there's an exception, set a default status for demo
-          setStatus("approved");
-          setStatusMessage("Your account is approved and has full access to community features.");
+          setStatus("unauthorized");
+          setStatusMessage("An error occurred while checking your account status.");
         }
       }
     };
 
     checkUserStatus();
-  }, [isLoaded, isSignedIn, user]);
+  }, [isLoaded, isSignedIn]);
 
   const handleSignOut = async () => {
     try {

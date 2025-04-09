@@ -245,10 +245,10 @@ export default function CommunityPage() {
         <div className="mt-12 text-center">
           <p className="text-gray-600 dark:text-gray-400 mb-4">New to our community?</p>
           <a
-            href="/auth/request-access"
+            href="mailto:chaimzushe@gmail.com?subject=Kingston%20Anash%20Access%20Request&body=Hello,%0A%0AI%20would%20like%20to%20request%20access%20to%20the%20Kingston%20Anash%20community%20website.%0A%0AName:%20%0AEmail:%20%0APhone:%20%0A%0AThank%20you."
             className="inline-block px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors"
           >
-            Request Access
+            Email Request Access
           </a>
         </div>
       </div>

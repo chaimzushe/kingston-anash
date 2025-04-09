@@ -1,7 +1,11 @@
-/* Hide Clerk's header */
+/* Hide Clerk's header and footer */
 .cl-headerTitle,
 .cl-headerSubtitle,
-.cl-internal-b3fm6y {
+.cl-internal-b3fm6y,
+.cl-footerActionText,
+.cl-footerActionLink,
+.cl-footerAction,
+.cl-footer {
   display: none !important;
 }
 
@@ -40,4 +44,22 @@
   display: flex !important;
   justify-content: center !important;
   width: 100% !important;
+}
+
+/* Force hide the footer and sign up link */
+.cl-footer,
+.cl-footerAction,
+.cl-footerActionText,
+.cl-footerActionLink,
+div[data-localization-key="formButtonPrimary.signUp"],
+div[data-localization-key="footerActionLink.signUp"],
+div[data-localization-key="footerActionText.signUp"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
 }
