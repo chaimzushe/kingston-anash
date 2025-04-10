@@ -77,7 +77,7 @@ export default function UnauthorizedPage() {
                 href="mailto:chaimzushe@gmail.com?subject=Kingston%20Anash%20Access%20Request&body=Hello,%0A%0AI%20would%20like%20to%20request%20access%20to%20the%20Kingston%20Anash%20community%20website.%0A%0AName:%20%0AEmail:%20%0APhone:%20%0A%0AThank%20you."
                 className="block w-full py-2 px-4 bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200 text-center font-medium rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
               >
-                Email Request Access
+                Request Access
               </a>
             </div>
           </div>
