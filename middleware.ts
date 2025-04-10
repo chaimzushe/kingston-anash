@@ -32,8 +32,16 @@ export function middleware(request: NextRequest) {
   // If no auth cookie is found, redirect to sign-in
   if (!hasAuthCookie) {
     console.log(`[Middleware] Redirecting unauthenticated user from ${pathname} to sign-in`);
-    const signInUrl = new URL('/auth/signin', request.url);
+
+    // Get the base URL (protocol + host)
+    const baseUrl = request.nextUrl.origin;
+
+    // Create the sign-in URL with the correct base URL
+    const signInUrl = new URL('/auth/signin', baseUrl);
+
+    // Add the current URL as a redirect parameter
     signInUrl.searchParams.set('redirect_url', request.url);
+
     return NextResponse.redirect(signInUrl);
   }
 
@@ -41,16 +49,16 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Configure the middleware to run on all routes except static files
+// Configure the middleware to run on specific routes
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - images/ (image files)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|images/).*)',
+    // Match all protected routes
+    '/community/:path*',
+    '/profile/:path*',
+    '/events/:path*',
+    '/api/community/:path*',
+
+    // Exclude static files, assets, and specific routes
+    '/((?!_next/static|_next/image|favicon.ico|images/|auth/signin/sso-callback).*)',
   ],
 };

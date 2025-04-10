@@ -89,54 +89,7 @@ export default function ProfilePage() {
           subtitle="Manage your account settings"
         />
 
-        {/* Status Card */}
-        <div className={`shadow-md rounded-lg p-6 mt-8 mb-8 ${status === "approved" ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800" : status === "pending" ? "bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800" : status === "rejected" ? "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800" : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"}`}>
-          <div className="flex items-start">
-            <div className="flex-shrink-0">
-              {/* Status Icon */}
-              <div className={`rounded-full p-3 ${status === "approved" ? "bg-green-100 dark:bg-green-800/30" : status === "pending" ? "bg-yellow-100 dark:bg-yellow-800/30" : status === "rejected" ? "bg-red-100 dark:bg-red-800/30" : status === "loading" ? "bg-blue-100 dark:bg-blue-800/30" : "bg-gray-100 dark:bg-gray-800/30"}`}>
-                {status === "approved" && (
-                  <svg className="h-7 w-7 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                )}
-                {status === "pending" && (
-                  <svg className="h-7 w-7 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                )}
-                {status === "rejected" && (
-                  <svg className="h-7 w-7 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                )}
-                {status === "loading" && (
-                  <svg className="h-7 w-7 text-blue-600 dark:text-blue-400 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                )}
-                {(status === "error" || status === "unauthorized") && (
-                  <svg className="h-7 w-7 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                )}
-              </div>
-            </div>
-            <div className="ml-4">
-              <h3 className={`text-lg font-medium ${status === "approved" ? "text-green-700 dark:text-green-300" : status === "pending" ? "text-yellow-700 dark:text-yellow-300" : status === "rejected" ? "text-red-700 dark:text-red-300" : "text-gray-700 dark:text-gray-300"}`}>
-                {status === "approved" && "Status: Approved"}
-                {status === "pending" && "Status: Pending Approval"}
-                {status === "rejected" && "Status: Rejected"}
-                {status === "unauthorized" && "Status: Unknown"}
-                {status === "loading" && "Status: Checking..."}
-                {status === "error" && "Status: Error"}
-              </h3>
-              <p className={`mt-1 text-sm ${status === "approved" ? "text-green-600 dark:text-green-400" : status === "pending" ? "text-yellow-600 dark:text-yellow-400" : status === "rejected" ? "text-red-600 dark:text-red-400" : "text-gray-600 dark:text-gray-400"}`}>
-                {statusMessage}
-              </p>
-            </div>
-          </div>
-        </div>
+   
 
         {/* User Info Card */}
         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8">

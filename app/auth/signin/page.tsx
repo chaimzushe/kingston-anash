@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { SignIn } from "@clerk/nextjs";
 import { useUser } from "@clerk/nextjs";
 import { PageHeader } from "@/components/layout";
+import { clerkConfig } from "@/app/clerk";
 import "./signin.css";
 
 export default function SignInPage() {
@@ -103,9 +104,10 @@ export default function SignInPage() {
                       footer: "hidden",
                     }
                   }}
-                  path="/auth/signin"
+                  path={clerkConfig.signInUrl}
                   routing="path"
-                  signUpUrl=""
+                  signUpUrl={clerkConfig.signUpUrl}
+                  afterSignInUrl={clerkConfig.afterSignInUrl}
                 />
               </div>
 
@@ -122,7 +124,7 @@ export default function SignInPage() {
                     href="mailto:chaimzushe@gmail.com?subject=Kingston%20Anash%20Access%20Request&body=Hello,%0A%0AI%20would%20like%20to%20request%20access%20to%20the%20Kingston%20Anash%20community%20website.%0A%0AName:%20%0AEmail:%20%0APhone:%20%0A%0AThank%20you."
                     className="block w-full py-3 px-4 bg-primary text-white text-center font-medium rounded-md hover:bg-primary/90 transition-all duration-200 cursor-pointer border-0 shadow-sm"
                   >
-                    EMAIL REQUEST
+                    REQUEST ACCESS
                   </a>
                 </div>
               </div>
