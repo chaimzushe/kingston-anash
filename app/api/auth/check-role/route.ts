@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET(request: NextRequest) {
   try {
     // Get the current authenticated user
-    const auth_session = await auth();
-    const userId = auth_session.userId;
+    const user = await currentUser();
 
-    if (!userId) {
+    if (!user) {
       return NextResponse.json(
         {
           authorized: false,
@@ -18,8 +17,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // For now, assume the user is authorized
-    // In a real application, you would check the user's role in Clerk
+    // User is authenticated, so they are authorized
     return NextResponse.json({
       authorized: true,
       status: 'approved',

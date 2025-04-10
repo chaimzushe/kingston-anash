@@ -13,49 +13,31 @@ export default function SignInPage() {
   const [isChecking, setIsChecking] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Check if the user has the member role in Clerk and handle redirect
+  // Redirect authenticated users to the requested page
   useEffect(() => {
-    const checkUserRoleAndRedirect = async () => {
+    const redirectAuthenticatedUser = () => {
       // Get the redirect URL from the query parameters
       const params = new URLSearchParams(window.location.search);
       const redirectUrl = params.get('redirect_url');
 
       if (isLoaded && isSignedIn) {
-        setIsChecking(true);
-        try {
-          const response = await fetch('/api/auth/check-role');
-          const data = await response.json();
-
-          if (data.authorized) {
-            setIsVerified(true);
-            setIsPending(false);
-
-            // If there's a redirect URL and the user is authorized, redirect them
-            if (redirectUrl) {
-              window.location.href = redirectUrl;
-              return;
-            }
-          } else if (data.status === 'pending') {
-            setIsVerified(false);
-            setIsPending(true);
-            setErrorMessage("Your membership request is pending approval. You'll receive an email when your access is granted.");
-          } else {
-            setIsVerified(false);
-            setIsPending(false);
-            setErrorMessage("Your account does not have access to community features. Please request access below.");
-          }
-        } catch (error) {
-          console.error("Error checking user role:", error);
-          setIsVerified(false);
-          setIsPending(false);
-          setErrorMessage("There was an error verifying your account. Please try again later.");
-        } finally {
-          setIsChecking(false);
+        // If there's a redirect URL and the user is signed in, redirect them
+        if (redirectUrl) {
+          window.location.href = redirectUrl;
+          return;
         }
+
+        // If no redirect URL, just mark as verified
+        setIsVerified(true);
+        setIsPending(false);
+        setIsChecking(false);
+      } else if (isLoaded) {
+        // User is not signed in
+        setIsChecking(false);
       }
     };
 
-    checkUserRoleAndRedirect();
+    redirectAuthenticatedUser();
   }, [isLoaded, isSignedIn]);
 
   return (

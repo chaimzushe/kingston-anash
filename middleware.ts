@@ -26,11 +26,19 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // For protected routes, redirect to sign-in
-  // We'll let the sign-in page handle the authentication check
-  const signInUrl = new URL('/auth/signin', request.url);
-  signInUrl.searchParams.set('redirect_url', request.url);
-  return NextResponse.redirect(signInUrl);
+  // Check for authentication cookie
+  const hasAuthCookie = request.cookies.has('__session') || request.cookies.has('__clerk_db_jwt');
+
+  // If no auth cookie is found, redirect to sign-in
+  if (!hasAuthCookie) {
+    console.log(`[Middleware] Redirecting unauthenticated user from ${pathname} to sign-in`);
+    const signInUrl = new URL('/auth/signin', request.url);
+    signInUrl.searchParams.set('redirect_url', request.url);
+    return NextResponse.redirect(signInUrl);
+  }
+
+  // User has an auth cookie, allow them to proceed
+  return NextResponse.next();
 }
 
 // Configure the middleware to run on all routes except static files

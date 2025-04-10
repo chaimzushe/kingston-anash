@@ -10,31 +10,19 @@ export default function UnauthorizedPage() {
   const [message, setMessage] = useState('Checking your account status...');
 
   useEffect(() => {
-    const checkUserStatus = async () => {
-      if (isLoaded && isSignedIn) {
-        try {
-          const response = await fetch('/api/auth/check-role');
-          const data = await response.json();
-
-          if (data.status === 'pending') {
-            setStatus('pending');
-            setMessage('Your membership request is pending approval. You will receive an email when your access is granted.');
-          } else {
-            setStatus('unauthorized');
-            setMessage('Your account does not have access to community features. Please contact the administrator if you believe this is an error.');
-          }
-        } catch (error) {
-          console.error('Error checking user status:', error);
-          setStatus('unauthorized');
-          setMessage('An error occurred while checking your account status. Please try again later.');
-        }
-      } else if (isLoaded && !isSignedIn) {
+    // Simplified flow - just check if user is signed in
+    if (isLoaded) {
+      if (isSignedIn) {
+        // If user is signed in, they should have access
+        // This page should only be shown if there's an error
+        setStatus('unauthorized');
+        setMessage('There was an error accessing the requested page. Please try again or contact support if the issue persists.');
+      } else {
+        // User is not signed in
         setStatus('unauthorized');
         setMessage('You need to sign in to access this page.');
       }
-    };
-
-    checkUserStatus();
+    }
   }, [isLoaded, isSignedIn]);
 
   if (!isLoaded) {
