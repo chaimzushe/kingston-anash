@@ -8,7 +8,7 @@ const getRelativeDate = (dayOffset: number): string => {
 };
 
 // Create dummy events data
-export const dummyEvents: Event[] = [
+export const dummyEvents: any[] = [
   // Today's events
   {
     id: '1',

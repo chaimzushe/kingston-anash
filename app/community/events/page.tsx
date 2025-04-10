@@ -6,20 +6,29 @@ import { PageHeader } from '@/components/layout';
 import Calendar from '@/components/events/Calendar';
 import EventList from '@/components/events/EventList';
 import EventCard from '@/components/events/EventCard';
-import { dummyEvents } from '@/data/eventsData';
+import EventForm from '@/components/events/EventForm';
 import { Event } from '@/types/events';
 import { useUser } from '@clerk/nextjs';
+import { PlusIcon } from '@heroicons/react/24/outline';
 
 export default function EventsPage() {
   const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded, user } = useUser();
 
   // State for selected date (default to today)
   const [selectedDate, setSelectedDate] = useState(new Date());
+  // State for events
+  const [events, setEvents] = useState<Event[]>([]);
   // State for filtered events
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   // State for mobile view
   const [isMobileView, setIsMobileView] = useState(false);
+  // State for loading
+  const [isLoading, setIsLoading] = useState(true);
+  // State for error
+  const [error, setError] = useState<string | null>(null);
+  // State for showing event form
+  const [showEventForm, setShowEventForm] = useState(false);
 
   // Client-side authentication check as a backup
   useEffect(() => {
@@ -29,6 +38,35 @@ export default function EventsPage() {
     }
   }, [isLoaded, isSignedIn, router]);
 
+  // Fetch events from API
+  const fetchEvents = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/community/events');
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch events');
+      }
+
+      const data = await response.json();
+      setEvents(data.events || []);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setError('Failed to load events. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch events when component mounts
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      fetchEvents();
+    }
+  }, [isLoaded, isSignedIn]);
+
   // Handle date selection
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -36,22 +74,26 @@ export default function EventsPage() {
 
   // Filter events for the selected date
   useEffect(() => {
-    const filtered = dummyEvents.filter(event => {
-      const eventDate = new Date(event.date);
-      return (
-        eventDate.getDate() === selectedDate.getDate() &&
-        eventDate.getMonth() === selectedDate.getMonth() &&
-        eventDate.getFullYear() === selectedDate.getFullYear()
-      );
-    });
+    if (events.length > 0) {
+      const filtered = events.filter(event => {
+        const eventDate = new Date(event.date);
+        return (
+          eventDate.getDate() === selectedDate.getDate() &&
+          eventDate.getMonth() === selectedDate.getMonth() &&
+          eventDate.getFullYear() === selectedDate.getFullYear()
+        );
+      });
 
-    // Sort events by start time
-    const sorted = [...filtered].sort((a, b) => {
-      return a.startTime.localeCompare(b.startTime);
-    });
+      // Sort events by start time
+      const sorted = [...filtered].sort((a, b) => {
+        return a.startTime.localeCompare(b.startTime);
+      });
 
-    setFilteredEvents(sorted);
-  }, [selectedDate]);
+      setFilteredEvents(sorted);
+    } else {
+      setFilteredEvents([]);
+    }
+  }, [selectedDate, events]);
 
   // Check if we're in mobile view
   useEffect(() => {
@@ -68,6 +110,14 @@ export default function EventsPage() {
     // Cleanup
     return () => window.removeEventListener('resize', checkMobileView);
   }, []);
+
+  // Handle event creation
+  const handleEventCreated = () => {
+    // Refresh the events list
+    fetchEvents();
+    // Hide the event form
+    setShowEventForm(false);
+  };
 
   // If still loading authentication status, show loading spinner
   if (!isLoaded) {
@@ -104,10 +154,33 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 pattern-overlay">
       <div className="max-w-7xl mx-auto">
-        <PageHeader
-          title="Community Events"
-          subtitle="View and join upcoming events in our community"
-        />
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+          <PageHeader
+            title="Community Events"
+            subtitle="View and join upcoming events in our community"
+          />
+
+          <button
+            onClick={() => setShowEventForm(!showEventForm)}
+            className="mt-4 md:mt-0 px-4 py-2 bg-gradient-primary text-white font-medium rounded-md shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md flex items-center justify-center"
+          >
+            {showEventForm ? (
+              'Cancel'
+            ) : (
+              <>
+                <PlusIcon className="w-5 h-5 mr-1" />
+                Create Event
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Event creation form */}
+        {showEventForm && (
+          <div className="mt-8">
+            <EventForm onEventCreated={handleEventCreated} />
+          </div>
+        )}
 
         {/* Desktop View */}
         {!isMobileView ? (
@@ -118,17 +191,27 @@ export default function EventsPage() {
                 <Calendar
                   onDateSelect={handleDateSelect}
                   selectedDate={selectedDate}
-                  events={dummyEvents.map(event => ({ date: new Date(event.date) }))}
+                  events={events.map(event => ({ date: new Date(event.date) }))}
                 />
               </div>
             </div>
 
             {/* Event List */}
             <div className="lg:col-span-2">
-              <EventList
-                events={dummyEvents}
-                date={selectedDate}
-              />
+              {isLoading ? (
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 flex justify-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                </div>
+              ) : error ? (
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center text-red-500">
+                  {error}
+                </div>
+              ) : (
+                <EventList
+                  events={events}
+                  date={selectedDate}
+                />
+              )}
             </div>
           </div>
         ) : (
@@ -139,7 +222,7 @@ export default function EventsPage() {
               <Calendar
                 onDateSelect={handleDateSelect}
                 selectedDate={selectedDate}
-                events={dummyEvents.map(event => ({ date: new Date(event.date) }))}
+                events={events.map(event => ({ date: new Date(event.date) }))}
               />
             </div>
 
@@ -157,10 +240,18 @@ export default function EventsPage() {
             </div>
 
             {/* Event Cards */}
-            {filteredEvents.length > 0 ? (
+            {isLoading ? (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 flex justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+              </div>
+            ) : error ? (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center text-red-500">
+                {error}
+              </div>
+            ) : filteredEvents.length > 0 ? (
               <div className="grid grid-cols-1 gap-4">
                 {filteredEvents.map(event => (
-                  <EventCard key={event.id} event={event} />
+                  <EventCard key={event._id} event={event} />
                 ))}
               </div>
             ) : (

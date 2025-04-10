@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { ClockIcon, MapPinIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { ClockIcon, MapPinIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Event } from '@/types/events';
 
 interface EventListProps {
@@ -55,7 +55,7 @@ const EventList: React.FC<EventListProps> = ({ events, date }) => {
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         {sortedEvents.length > 0 ? (
           sortedEvents.map((event) => (
-            <div key={event.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+            <div key={event._id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                 {event.title}
               </h3>
@@ -71,10 +71,18 @@ const EventList: React.FC<EventListProps> = ({ events, date }) => {
                   <span>{event.location}</span>
                 </div>
 
-                {event.attendees && (
-                  <div className="flex items-center">
-                    <UserGroupIcon className="w-4 h-4 mr-2 text-gray-400" />
-                    <span>{event.attendees} attendees</span>
+                <div className="flex items-center">
+                  <UserIcon className="w-4 h-4 mr-2 text-gray-400" />
+                  <span>
+                    {event.gender === 'men' ? 'Men Only' :
+                     event.gender === 'women' ? 'Women Only' :
+                     'Everyone Welcome'}
+                  </span>
+                </div>
+
+                {event.creator && (
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Created by {event.creator.name}
                   </div>
                 )}
               </div>
@@ -85,18 +93,7 @@ const EventList: React.FC<EventListProps> = ({ events, date }) => {
                 </p>
               )}
 
-              {event.tags && event.tags.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {event.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
+
             </div>
           ))
         ) : (

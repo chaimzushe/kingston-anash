@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { clerkMiddleware, auth } from '@clerk/nextjs/server';
 
 // Define protected routes that require authentication
 const PROTECTED_ROUTES = [
@@ -13,40 +14,23 @@ const PROTECTED_ROUTES = [
   '/events',
 ];
 
+// Apply Clerk middleware
+const clerkMiddlewareInstance = clerkMiddleware();
+
+// Export the Clerk middleware as the default middleware
+export default clerkMiddlewareInstance;
+
+// Add our custom middleware for cache control
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  // Clone the response
+  const response = NextResponse.next();
 
-  // Check if the current path is a protected route
-  const isProtectedRoute = PROTECTED_ROUTES.some(route =>
-    pathname === route || pathname.startsWith(`${route}/`)
-  );
+  // Add cache control headers to prevent aggressive caching
+  response.headers.set('Cache-Control', 'no-store, max-age=0');
+  response.headers.set('Pragma', 'no-cache');
+  response.headers.set('Expires', '0');
 
-  // If it's not a protected route, allow the request to proceed
-  if (!isProtectedRoute) {
-    return NextResponse.next();
-  }
-
-  // Check for authentication cookie
-  const hasAuthCookie = request.cookies.has('__session') || request.cookies.has('__clerk_db_jwt');
-
-  // If no auth cookie is found, redirect to sign-in
-  if (!hasAuthCookie) {
-    console.log(`[Middleware] Redirecting unauthenticated user from ${pathname} to sign-in`);
-
-    // Get the base URL (protocol + host)
-    const baseUrl = request.nextUrl.origin;
-
-    // Create the sign-in URL with the correct base URL
-    const signInUrl = new URL('/auth/signin', baseUrl);
-
-    // Add the current URL as a redirect parameter
-    signInUrl.searchParams.set('redirect_url', request.url);
-
-    return NextResponse.redirect(signInUrl);
-  }
-
-  // User has an auth cookie, allow them to proceed
-  return NextResponse.next();
+  return response;
 }
 
 // Configure the middleware to run on specific routes
