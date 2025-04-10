@@ -9,36 +9,24 @@ import "./signin.css";
 
 export default function SignInPage() {
   const { isLoaded, isSignedIn } = useUser();
-  const [isVerified, setIsVerified] = useState<boolean | null>(null);
-  const [isPending, setIsPending] = useState<boolean>(false);
-  const [isChecking, setIsChecking] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   // Redirect authenticated users to the requested page
   useEffect(() => {
-    const redirectAuthenticatedUser = () => {
+    if (isLoaded && isSignedIn) {
+      setIsRedirecting(true);
       // Get the redirect URL from the query parameters
       const params = new URLSearchParams(window.location.search);
       const redirectUrl = params.get('redirect_url');
 
-      if (isLoaded && isSignedIn) {
-        // If there's a redirect URL and the user is signed in, redirect them
-        if (redirectUrl) {
-          window.location.href = redirectUrl;
-          return;
-        }
-
-        // If no redirect URL, just mark as verified
-        setIsVerified(true);
-        setIsPending(false);
-        setIsChecking(false);
-      } else if (isLoaded) {
-        // User is not signed in
-        setIsChecking(false);
+      // If there's a redirect URL, redirect to it
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        // Otherwise, redirect to the community page
+        window.location.href = '/community';
       }
-    };
-
-    redirectAuthenticatedUser();
+    }
   }, [isLoaded, isSignedIn]);
 
   return (
@@ -50,34 +38,10 @@ export default function SignInPage() {
         />
 
         <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-8 mt-4 sm:mt-8 shadow-md">
-          {isLoaded && isSignedIn && isVerified === false ? (
-            <div className="space-y-6">
-              <div className={`${isPending ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-500' : 'bg-red-50 dark:bg-red-900/20 border-red-500'} border-l-4 p-3 sm:p-4 rounded`}>
-                <p className={`${isPending ? 'text-yellow-700 dark:text-yellow-300' : 'text-red-700 dark:text-red-300'}`}>
-                  {errorMessage}
-                </p>
-              </div>
-              <div className="flex flex-col space-y-4">
-                {!isPending && (
-                  <a
-                    href="/auth/request-access"
-                    className="block w-full py-2.5 px-4 bg-primary text-white text-center font-medium rounded-md hover:bg-primary/90 transition-all duration-200 cursor-pointer border-0"
-                  >
-                    REQUEST ACCESS
-                  </a>
-                )}
-                <button
-                  onClick={() => window.location.href = "/"}
-                  className="block w-full py-2.5 px-4 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white text-center font-medium rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-all duration-200 cursor-pointer border-0"
-                >
-                  RETURN TO HOME
-                </button>
-              </div>
-            </div>
-          ) : isChecking ? (
+          {isRedirecting ? (
             <div className="flex flex-col items-center justify-center py-8">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">Verifying your account...</p>
+              <p className="mt-4 text-gray-600 dark:text-gray-400">Redirecting you...</p>
             </div>
           ) : (
             <>

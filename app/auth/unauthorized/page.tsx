@@ -5,21 +5,17 @@ import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 
 export default function UnauthorizedPage() {
-  const { isLoaded, isSignedIn, user } = useUser();
-  const [status, setStatus] = useState<'loading' | 'pending' | 'unauthorized'>('loading');
+  const { isLoaded, isSignedIn } = useUser();
   const [message, setMessage] = useState('Checking your account status...');
 
   useEffect(() => {
-    // Simplified flow - just check if user is signed in
     if (isLoaded) {
       if (isSignedIn) {
         // If user is signed in, they should have access
         // This page should only be shown if there's an error
-        setStatus('unauthorized');
         setMessage('There was an error accessing the requested page. Please try again or contact support if the issue persists.');
       } else {
         // User is not signed in
-        setStatus('unauthorized');
         setMessage('You need to sign in to access this page.');
       }
     }
@@ -49,29 +45,16 @@ export default function UnauthorizedPage() {
           <p className="text-gray-600 dark:text-gray-400 mb-6">{message}</p>
 
           <div className="space-y-3">
-            {status === 'pending' ? (
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-4 rounded-r mb-4 text-left">
-                <div className="flex">
-                  <svg className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
-                  <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                    Your request is being reviewed. This usually takes 1-2 business days.
-                  </p>
-                </div>
+            <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-4 rounded-r mb-4 text-left">
+              <div className="flex">
+                <svg className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm text-blue-700 dark:text-blue-300">
+                  If you believe this is an error, please contact the administrator.
+                </p>
               </div>
-            ) : (
-              <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 p-4 rounded-r mb-4 text-left">
-                <div className="flex">
-                  <svg className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <p className="text-sm text-blue-700 dark:text-blue-300">
-                    If you believe this is an error, please contact the administrator.
-                  </p>
-                </div>
-              </div>
-            )}
+            </div>
 
             <div className="space-y-3">
               <Link
