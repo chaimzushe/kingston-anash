@@ -103,12 +103,16 @@ export default function EventsPage() {
   useEffect(() => {
     if (events.length > 0) {
       const filtered = events.filter(event => {
-        const eventDate = new Date(event.date);
-        return (
-          eventDate.getDate() === selectedDate.getDate() &&
-          eventDate.getMonth() === selectedDate.getMonth() &&
-          eventDate.getFullYear() === selectedDate.getFullYear()
-        );
+        // Convert dates to YYYY-MM-DD format for comparison to avoid timezone issues
+        const eventDateStr = event.date.split('T')[0];
+        const selectedDateStr = selectedDate.toISOString().split('T')[0];
+        return eventDateStr === selectedDateStr;
+      });
+
+      console.log('Date comparison:', {
+        events: events.map(e => ({ id: e._id, date: e.date })),
+        selectedDate: selectedDate.toISOString(),
+        filtered: filtered.map(e => ({ id: e._id, date: e.date }))
       });
 
       // Sort events by start time

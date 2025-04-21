@@ -40,7 +40,12 @@ const Calendar: React.FC<CalendarProps> = ({ onDateSelect, selectedDate, events 
   // Check if a date has events
   const hasEvents = (date: Date) => {
     const dateStr = formatDateForComparison(date);
-    return events.some(event => formatDateForComparison(new Date(event.date)) === dateStr);
+    return events.some(event => {
+      // Handle both Date objects and string dates
+      const eventDate = event.date instanceof Date ? event.date : new Date(event.date);
+      const eventDateStr = formatDateForComparison(eventDate);
+      return eventDateStr === dateStr;
+    });
   };
 
   // Check if a date is today
