@@ -12,6 +12,9 @@ const PROTECTED_ROUTES = [
   '/profile',
   '/api/community/members',
   '/api/community/events/create',
+  '/api/community/events/update',
+  '/api/community/events/delete',
+  '/api/community/events/user',
   '/events',
 ];
 
@@ -44,6 +47,6 @@ export const config = {
     '/api/community/:path*',
 
     // Exclude static files, assets, and specific routes
-    '/((?!_next/static|_next/image|favicon.ico|images/|auth/signin/sso-callback).*)',
+    '/((?!_next/static|_next/image|favicon.ico|images/|auth/signin|auth/signin/.*|auth/signin/sso-callback).*)',
   ],
 };

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { getMockEvents } from '@/lib/mockEvents';
 import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/layout';
 import Calendar from '@/components/events/Calendar';
@@ -9,7 +8,7 @@ import EventList from '@/components/events/EventList';
 import EventCard from '@/components/events/EventCard';
 import EventForm from '@/components/events/EventForm';
 import { Event } from '@/types/events';
-import { useUser, useAuth } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import { PlusIcon } from '@heroicons/react/24/outline';
 
 export default function EventsPage() {
@@ -49,15 +48,11 @@ export default function EventsPage() {
       const data = await response.json();
       console.log('Fetched events from API:', data.events?.length || 0, 'events');
 
-      // Get mock events from localStorage (client-side only)
-      const mockEvents = getMockEvents();
-      console.log('Fetched mock events from localStorage:', mockEvents.length, 'events');
-
-      // Combine API events and mock events
-      const allEvents = [...(data.events || []), ...mockEvents];
+      // Use only API events
+      const allEvents = data.events || [];
 
       // Sort events by date and start time
-      const sortedEvents = allEvents.sort((a, b) => {
+      const sortedEvents = allEvents.sort((a: Event, b: Event) => {
         // First sort by date
         const dateComparison = a.date.localeCompare(b.date);
         if (dateComparison !== 0) return dateComparison;

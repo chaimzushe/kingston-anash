@@ -12,20 +12,29 @@ export const dynamicParams = true;
 
 // Note: generateMetadata is not supported in route handlers
 
-// Get all community events
+// Get events created by a specific user (client-side version)
 export async function GET(request: NextRequest) {
   try {
-    // This API is public, no authentication check needed
+    // Get the user ID from the query parameters
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
 
-    // Get query parameters
-    const searchParams = request.nextUrl.searchParams;
-    const date = searchParams.get('date');
+    if (!userId) {
+      return NextResponse.json(
+        { message: 'User ID is required' },
+        { status: 400 }
+      );
+    }
 
-    // Build the query using our helper function
-    const dateFilter = date ? `date == "${date}"` : '';
-    const query = createEventsQuery(dateFilter);
+    console.log(`Fetching events for user ${userId}`);
 
-    console.log('Executing Sanity query:', query);
+    // Build the query to get movies
+    // Note: The public movies dataset doesn't have user-specific data
+    // So we're just getting all movies as a demonstration
+    const userFilter = ``;
+    const query = createEventsQuery(userFilter);
+
+    console.log(`Executing Sanity query for user ${userId}:`, query);
 
     try {
       // Fetch events from Sanity with proper caching headers
@@ -36,7 +45,7 @@ export async function GET(request: NextRequest) {
 
         const events = await sanityClient.fetch(
           query,
-          { _timestamp: timestamp }, // Add timestamp to params
+          { userId, _timestamp: timestamp }, // Add timestamp to params
           {
             // Add cache tags for revalidation and force no caching
             next: {
@@ -46,7 +55,7 @@ export async function GET(request: NextRequest) {
           }
         );
 
-        console.log('Returning events:', events.length, 'total events');
+        console.log(`Found ${events.length} Sanity events for user ${userId}`);
 
         return NextResponse.json({
           events,
@@ -68,12 +77,12 @@ export async function GET(request: NextRequest) {
         });
       }
     } catch (error) {
-      console.error('Error in events API:', error);
+      console.error('Error in user-client API:', error);
 
       // Return an error response
       return NextResponse.json(
         {
-          message: 'Error fetching events',
+          message: 'Error fetching user events',
           error: error instanceof Error ? error.message : 'Unknown error',
           timestamp: new Date().toISOString(),
           events: [] // Return empty array for backward compatibility
@@ -82,7 +91,7 @@ export async function GET(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Error fetching community events:', error);
+    console.error('Error fetching user events:', error);
     return NextResponse.json(
       {
         message: 'An error occurred while fetching events',

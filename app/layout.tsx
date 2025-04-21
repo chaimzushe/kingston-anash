@@ -5,6 +5,7 @@ import Navigation from "../components/Navigation";
 import ServiceWorkerRegistration from "../components/ServiceWorkerRegistration";
 import { Providers } from "./providers";
 import CacheBuster from "../components/common/CacheBuster";
+import DebugLinks from "../components/debug/DebugLinks";
 
 
 const geistSans = Geist({

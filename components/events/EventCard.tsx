@@ -10,16 +10,25 @@ interface EventCardProps {
 
 const EventCard: React.FC<EventCardProps> = ({ event }) => {
   // Format time for display
-  const formatTime = (timeString: string) => {
-    const [hours, minutes] = timeString.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const hour12 = hour % 12 || 12;
-    return `${hour12}:${minutes} ${ampm}`;
+  const formatTime = (timeString: string | null | undefined) => {
+    if (!timeString) return '';
+
+    try {
+      const [hours, minutes] = timeString.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const hour12 = hour % 12 || 12;
+      return `${hour12}:${minutes} ${ampm}`;
+    } catch (error) {
+      console.error('Error formatting time:', error, 'timeString:', timeString);
+      return 'Invalid time';
+    }
   };
 
   // Format duration for display
-  const formatDuration = (minutes: number) => {
+  const formatDuration = (minutes: number | null | undefined) => {
+    if (!minutes) return '';
+
     if (minutes < 60) {
       return `${minutes} min`;
     } else if (minutes === 60) {
@@ -74,7 +83,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             <ClockIcon className="w-4 h-4 mr-2 text-primary" />
             <span className="font-medium">
               {formatTime(event.startTime)}
-              {event.duration ? ` (${formatDuration(event.duration)})` : ` - ${formatTime(event.endTime)}`}
+              {event.duration ? ` (${formatDuration(event.duration)})` : event.endTime ? ` - ${formatTime(event.endTime)}` : ''}
             </span>
           </div>
 

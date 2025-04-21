@@ -68,7 +68,7 @@ export default function SignInPage() {
                       footer: "hidden",
                     }
                   }}
-                  path={clerkConfig.signInUrl}
+                  path="/auth/signin"
                   routing="path"
                   signUpUrl={clerkConfig.signUpUrl}
                   afterSignInUrl={clerkConfig.afterSignInUrl}

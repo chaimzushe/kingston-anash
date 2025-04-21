@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { PageHeader } from "@/components/layout";
+import UserEvents from "@/components/profile/UserEvents";
 
 export default function ProfilePage() {
   const { user, isLoaded, isSignedIn } = useUser();
@@ -89,7 +90,7 @@ export default function ProfilePage() {
           subtitle="Manage your account settings"
         />
 
-   
+
 
         {/* User Info Card */}
         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8">
@@ -124,6 +125,11 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* User Events Section */}
+        <div className="mt-8">
+          <UserEvents userId={user.id} />
         </div>
       </div>
     </div>
