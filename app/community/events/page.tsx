@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { getMockEvents } from '@/lib/mockEvents';
 import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/layout';
 import Calendar from '@/components/events/Calendar';
@@ -8,12 +9,15 @@ import EventList from '@/components/events/EventList';
 import EventCard from '@/components/events/EventCard';
 import EventForm from '@/components/events/EventForm';
 import { Event } from '@/types/events';
-import { useUser } from '@clerk/nextjs';
+import { useUser, useAuth } from '@clerk/nextjs';
 import { PlusIcon } from '@heroicons/react/24/outline';
 
 export default function EventsPage() {
   const router = useRouter();
   const { isSignedIn, isLoaded, user } = useUser();
+
+  // No longer checking for member role
+  // All authenticated users can create events
 
   // State for selected date (default to today)
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -30,16 +34,8 @@ export default function EventsPage() {
   // State for showing event form
   const [showEventForm, setShowEventForm] = useState(false);
 
-  // Client-side authentication check as a backup
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      console.log('User not signed in, redirecting to sign-in page');
-      router.push('/auth/signin?redirect_url=/community/events');
-    }
-  }, [isLoaded, isSignedIn, router]);
-
   // Fetch events from API
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -51,21 +47,52 @@ export default function EventsPage() {
       }
 
       const data = await response.json();
-      setEvents(data.events || []);
+      console.log('Fetched events from API:', data.events?.length || 0, 'events');
+
+      // Get mock events from localStorage (client-side only)
+      const mockEvents = getMockEvents();
+      console.log('Fetched mock events from localStorage:', mockEvents.length, 'events');
+
+      // Combine API events and mock events
+      const allEvents = [...(data.events || []), ...mockEvents];
+
+      // Sort events by date and start time
+      const sortedEvents = allEvents.sort((a, b) => {
+        // First sort by date
+        const dateComparison = a.date.localeCompare(b.date);
+        if (dateComparison !== 0) return dateComparison;
+
+        // Then sort by start time
+        return a.startTime.localeCompare(b.startTime);
+      });
+
+      console.log('Combined events:', sortedEvents.length, 'total events');
+      setEvents(sortedEvents);
     } catch (error) {
       console.error('Error fetching events:', error);
       setError('Failed to load events. Please try again later.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  // Fetch events when component mounts
+  // Client-side authentication check as a backup
   useEffect(() => {
-    if (isLoaded && isSignedIn) {
+    if (isLoaded && !isSignedIn) {
+      console.log('User not signed in, redirecting to sign-in page');
+      router.push('/auth/signin?redirect_url=/community/events');
+    } else if (isLoaded && isSignedIn) {
+      // If user is signed in, fetch events
       fetchEvents();
     }
-  }, [isLoaded, isSignedIn]);
+  }, [isLoaded, isSignedIn, router, fetchEvents]);
+
+  // Fetch events when component mounts, regardless of auth state
+  useEffect(() => {
+    if (isLoaded) {
+      fetchEvents();
+    }
+  }, [isLoaded, fetchEvents]);
 
   // Handle date selection
   const handleDateSelect = (date: Date) => {
@@ -90,8 +117,10 @@ export default function EventsPage() {
       });
 
       setFilteredEvents(sorted);
+      console.log('Filtered events for selected date:', sorted.length, 'events');
     } else {
       setFilteredEvents([]);
+      console.log('No events to filter');
     }
   }, [selectedDate, events]);
 
@@ -112,11 +141,21 @@ export default function EventsPage() {
   }, []);
 
   // Handle event creation
-  const handleEventCreated = () => {
+  const handleEventCreated = async () => {
+    // Wait a moment to ensure the event is saved
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     // Refresh the events list
-    fetchEvents();
+    await fetchEvents();
+
     // Hide the event form
     setShowEventForm(false);
+
+    // Log for debugging
+    console.log('Events refreshed after creation');
+
+    // Force a re-render by updating the state
+    setEvents(prev => [...prev]);
   };
 
   // If still loading authentication status, show loading spinner
@@ -160,19 +199,21 @@ export default function EventsPage() {
             subtitle="View and join upcoming events in our community"
           />
 
-          <button
-            onClick={() => setShowEventForm(!showEventForm)}
-            className="mt-4 md:mt-0 px-4 py-2 bg-gradient-primary text-white font-medium rounded-md shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md flex items-center justify-center"
-          >
-            {showEventForm ? (
-              'Cancel'
-            ) : (
-              <>
-                <PlusIcon className="w-5 h-5 mr-1" />
-                Create Event
-              </>
-            )}
-          </button>
+          {isLoaded && isSignedIn ? (
+            <button
+              onClick={() => setShowEventForm(!showEventForm)}
+              className="mt-4 md:mt-0 px-4 py-2 bg-gradient-primary text-white font-medium rounded-md shadow-sm transition-all duration-200 hover:opacity-90 hover:shadow-md flex items-center justify-center"
+            >
+              {showEventForm ? (
+                'Cancel'
+              ) : (
+                <>
+                  <PlusIcon className="w-5 h-5 mr-1" />
+                  Create Event
+                </>
+              )}
+            </button>
+          ) : null}
         </div>
 
         {/* Event creation form */}

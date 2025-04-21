@@ -16,12 +16,12 @@ export default defineConfig({
     types: schemaTypes,
   },
   cors: {
-    allowOrigins: ['http://localhost:3000', 'http://localhost:3001'],
+    allowOrigins: ['*'],
     allowCredentials: true,
   },
   api: {
     cors: {
-      allowOrigins: ['http://localhost:3000', 'http://localhost:3001'],
+      allowOrigins: ['*'],
       allowCredentials: true,
     },
   },

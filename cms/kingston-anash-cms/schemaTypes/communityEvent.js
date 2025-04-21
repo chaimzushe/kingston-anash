@@ -1,27 +1,29 @@
-export default {
+import {defineType, defineField} from 'sanity'
+
+export default defineType({
   name: 'communityEvent',
   title: 'Community Events',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
       validation: Rule => Rule.required()
-    },
-    {
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       description: 'Optional description of the event'
-    },
-    {
+    }),
+    defineField({
       name: 'date',
       title: 'Date',
       type: 'date',
       validation: Rule => Rule.required()
-    },
-    {
+    }),
+    defineField({
       name: 'startTime',
       title: 'Start Time',
       type: 'string',
@@ -29,8 +31,8 @@ export default {
       validation: Rule => Rule.required().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, {
         message: 'Please use 24-hour format (HH:MM)'
       })
-    },
-    {
+    }),
+    defineField({
       name: 'endTime',
       title: 'End Time',
       type: 'string',
@@ -38,21 +40,21 @@ export default {
       validation: Rule => Rule.required().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, {
         message: 'Please use 24-hour format (HH:MM)'
       })
-    },
-    {
+    }),
+    defineField({
       name: 'duration',
       title: 'Duration (minutes)',
       type: 'number',
       description: 'Duration of the event in minutes (optional)',
       validation: Rule => Rule.positive().integer().optional()
-    },
-    {
+    }),
+    defineField({
       name: 'location',
       title: 'Location',
       type: 'string',
       validation: Rule => Rule.required()
-    },
-    {
+    }),
+    defineField({
       name: 'gender',
       title: 'Gender',
       type: 'string',
@@ -65,8 +67,8 @@ export default {
         layout: 'radio'
       },
       validation: Rule => Rule.required()
-    },
-    {
+    }),
+    defineField({
       name: 'creator',
       title: 'Creator',
       type: 'object',
@@ -87,13 +89,13 @@ export default {
           type: 'string'
         }
       ]
-    },
-    {
+    }),
+    defineField({
       name: 'createdAt',
       title: 'Created At',
       type: 'datetime',
       readOnly: true
-    }
+    })
   ],
   initialValue: {
     gender: 'both',
@@ -112,4 +114,4 @@ export default {
       }
     }
   }
-}
+})

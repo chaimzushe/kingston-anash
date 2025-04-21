@@ -25,5 +25,6 @@ export const clerkConfig = {
     "/minyanim/(.*)",
     "/services",
     "/api/auth/(.*)",
+    "/api/community/events",
   ],
 };

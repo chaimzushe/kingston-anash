@@ -18,6 +18,21 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
     return `${hour12}:${minutes} ${ampm}`;
   };
 
+  // Format duration for display
+  const formatDuration = (minutes: number) => {
+    if (minutes < 60) {
+      return `${minutes} min`;
+    } else if (minutes === 60) {
+      return '1 hour';
+    } else if (minutes % 60 === 0) {
+      return `${minutes / 60} hours`;
+    } else {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return `${hours} hr ${remainingMinutes} min`;
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="p-4">
@@ -28,7 +43,10 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
         <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
           <div className="flex items-center">
             <ClockIcon className="w-4 h-4 mr-2 text-gray-400" />
-            <span>{formatTime(event.startTime)} - {formatTime(event.endTime)}</span>
+            <span>
+              {formatTime(event.startTime)}
+              {event.duration ? ` (${formatDuration(event.duration)})` : ` - ${formatTime(event.endTime)}`}
+            </span>
           </div>
 
           <div className="flex items-center">

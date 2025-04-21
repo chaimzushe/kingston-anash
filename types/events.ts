@@ -10,6 +10,7 @@ export interface Event {
   date: string; // ISO date string
   startTime: string; // 24-hour format (HH:MM)
   endTime: string; // 24-hour format (HH:MM)
+  duration?: number; // Duration in minutes
   location: string;
   description?: string;
   gender: 'men' | 'women' | 'both';

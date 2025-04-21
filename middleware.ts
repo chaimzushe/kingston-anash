@@ -11,6 +11,7 @@ const PROTECTED_ROUTES = [
   '/community/lashon-horo',
   '/profile',
   '/api/community/members',
+  '/api/community/events/create',
   '/events',
 ];
 

@@ -16,8 +16,10 @@ export const sanityWriteClient = createClient({
   ...config,
   // If you have a token in environment variables, use it here
   token: process.env.SANITY_API_TOKEN,
-  // Otherwise, you'll need to add a token for write operations
-  // You can create one at https://manage.sanity.io/
+  // Disable CORS origin check for API requests
+  useCdn: false,
+  // Disable authentication check
+  withCredentials: false,
 });
 
 // Helper function for generating image URLs with the Sanity Image Pipeline

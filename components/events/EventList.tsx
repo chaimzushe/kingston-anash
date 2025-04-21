@@ -29,6 +29,21 @@ const EventList: React.FC<EventListProps> = ({ events, date }) => {
     return `${hour12}:${minutes} ${ampm}`;
   };
 
+  // Format duration for display
+  const formatDuration = (minutes: number) => {
+    if (minutes < 60) {
+      return `${minutes} min`;
+    } else if (minutes === 60) {
+      return '1 hour';
+    } else if (minutes % 60 === 0) {
+      return `${minutes / 60} hours`;
+    } else {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return `${hours} hr ${remainingMinutes} min`;
+    }
+  };
+
   // Filter events for the selected date
   const filteredEvents = events.filter(event => {
     const eventDate = new Date(event.date);
@@ -63,7 +78,10 @@ const EventList: React.FC<EventListProps> = ({ events, date }) => {
               <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
                 <div className="flex items-center">
                   <ClockIcon className="w-4 h-4 mr-2 text-gray-400" />
-                  <span>{formatTime(event.startTime)} - {formatTime(event.endTime)}</span>
+                  <span>
+                    {formatTime(event.startTime)}
+                    {event.duration ? ` (${formatDuration(event.duration)})` : ` - ${formatTime(event.endTime)}`}
+                  </span>
                 </div>
 
                 <div className="flex items-center">
