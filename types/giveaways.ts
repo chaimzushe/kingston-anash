@@ -8,7 +8,8 @@ export interface Giveaway {
   contactName: string;
   contactEmail?: string;
   contactPhone?: string;
-  imageUrl?: string;
+  imageUrl?: string; // Main image (for backward compatibility)
+  images?: string[]; // Array of image URLs (max 3)
   postedDate: string; // ISO date string
   isAvailable: boolean;
   price?: number; // Optional price in dollars

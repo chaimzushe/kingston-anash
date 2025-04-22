@@ -16,7 +16,7 @@ interface DropdownMenuProps {
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ label, items }) => {
   return (
     <div className="relative group">
-      <button className="flex items-center text-white hover:text-amber-200 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+      <button className="flex items-center text-white hover:text-amber-200 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 cursor-pointer">
         <span>{label}</span>
         <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

@@ -30,7 +30,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
         <div className="flex justify-end mb-2">
           <button
             onClick={onClose}
-            className="p-2 rounded-full bg-blue-800 hover:bg-blue-700 transition-colors duration-150 focus:outline-none"
+            className="p-2 rounded-full bg-blue-800 hover:bg-blue-700 transition-colors duration-150 focus:outline-none cursor-pointer"
             aria-label="Close menu"
           >
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +44,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
           <div key={index} className="block rounded-md text-base font-medium text-white">
             <button
               onClick={() => toggleSection(menu.label)}
-              className="flex items-center justify-between w-full py-3 border-b border-blue-400 focus:outline-none focus:ring-0"
+              className="flex items-center justify-between w-full py-3 border-b border-blue-400 focus:outline-none focus:ring-0 cursor-pointer"
             >
               <div className="flex items-center space-x-2">
                 {menu.label === 'Community' ? (

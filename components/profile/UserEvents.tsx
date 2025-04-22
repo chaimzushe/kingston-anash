@@ -311,7 +311,7 @@ const UserEvents: React.FC<UserEventsProps> = ({ userId }) => {
 
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
-          className="text-sm px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors duration-200"
+          className="text-sm px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors duration-200 cursor-pointer"
         >
           {showCreateForm ? 'Cancel' : 'Create New Event'}
         </button>
@@ -333,7 +333,7 @@ const UserEvents: React.FC<UserEventsProps> = ({ userId }) => {
           />
           <button
             onClick={() => setEditingEvent(null)}
-            className="mt-4 text-sm px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded transition-colors duration-200"
+            className="mt-4 text-sm px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded transition-colors duration-200 cursor-pointer"
           >
             Cancel Editing
           </button>
@@ -345,7 +345,7 @@ const UserEvents: React.FC<UserEventsProps> = ({ userId }) => {
               <p className="text-gray-500 dark:text-gray-400">You haven't created any events yet.</p>
               <button
                 onClick={() => setShowCreateForm(true)}
-                className="mt-4 text-sm px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors duration-200"
+                className="mt-4 text-sm px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors duration-200 cursor-pointer"
               >
                 Create Your First Event
               </button>
@@ -383,7 +383,7 @@ const UserEvents: React.FC<UserEventsProps> = ({ userId }) => {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => setEditingEvent(event)}
-                        className="p-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                        className="p-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer"
                         aria-label="Edit event"
                       >
                         <PencilIcon className="h-5 w-5" />
@@ -394,7 +394,7 @@ const UserEvents: React.FC<UserEventsProps> = ({ userId }) => {
                           <button
                             onClick={() => handleDeleteEvent(event._id)}
                             disabled={isDeleting === event._id}
-                            className={`text-xs px-2 py-1 bg-red-600 text-white rounded ${
+                            className={`text-xs px-2 py-1 bg-red-600 text-white rounded cursor-pointer ${
                               isDeleting === event._id ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'
                             }`}
                           >
@@ -402,7 +402,7 @@ const UserEvents: React.FC<UserEventsProps> = ({ userId }) => {
                           </button>
                           <button
                             onClick={() => setShowConfirmDelete(null)}
-                            className="text-xs px-2 py-1 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
+                            className="text-xs px-2 py-1 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer"
                           >
                             Cancel
                           </button>
@@ -410,7 +410,7 @@ const UserEvents: React.FC<UserEventsProps> = ({ userId }) => {
                       ) : (
                         <button
                           onClick={() => setShowConfirmDelete(event._id)}
-                          className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                          className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 cursor-pointer"
                           aria-label="Delete event"
                         >
                           <TrashIcon className="h-5 w-5" />
