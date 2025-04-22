@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { PageHeader } from '@/components/layout';
@@ -141,8 +141,7 @@ const sampleGiveaways: Giveaway[] = [
   }
 ];
 
-// Get all unique categories from the sample data
-const allCategories = Array.from(new Set(sampleGiveaways.map(g => g.category)));
+// Categories removed as filters are no longer needed
 
 // Define view types
 type ViewType = 'grid' | 'list';
@@ -165,36 +164,46 @@ export default function GiveawaysPage() {
   // State for search
   const [searchQuery, setSearchQuery] = useState('');
 
-  // State for advanced filters
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-
   // State for view options
   const [viewType, setViewType] = useState<ViewType>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('newest');
 
-  // Function to toggle category selection
-  const toggleCategory = (category: string) => {
-    setSelectedCategories(prev =>
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    );
-  };
+  // State for scroll position and animation
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Function to reset all filters
-  const resetFilters = () => {
-    setSearchQuery('');
-    setSelectedCategories([]);
-  };
+  // Search functionality is handled inline
 
-  // Filter giveaways based on all filters
+  // Add scroll event listener with debouncing
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 100);
+      setIsScrolling(true);
+
+      // Clear any existing timer
+      if (scrollTimerRef.current) {
+        clearTimeout(scrollTimerRef.current);
+      }
+
+      // Set a new timer to detect when scrolling stops
+      scrollTimerRef.current = setTimeout(() => {
+        setIsScrolling(false);
+      }, 500);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimerRef.current) {
+        clearTimeout(scrollTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Filter giveaways based on search query
   const filteredGiveaways = sampleGiveaways.filter((giveaway: Giveaway) => {
-
-    // Filter by selected categories
-    if (selectedCategories.length > 0 && !selectedCategories.includes(giveaway.category)) {
-      return false;
-    }
 
     // Filter by search query
     if (searchQuery) {
@@ -264,37 +273,68 @@ export default function GiveawaysPage() {
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 pattern-overlay">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8">
           <PageHeader
             title="Community Marketplace"
             subtitle="Browse items available from community members"
           />
-          <button
-            className="px-4 py-2 bg-white dark:bg-gray-800 text-primary border border-primary rounded-md transition-all duration-300 flex items-center space-x-2 cursor-pointer hover:bg-primary hover:text-white"
-            onClick={() => alert('Post New Item feature coming soon!')}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            <span>Post New Item</span>
-          </button>
+          {/* Desktop Post Button */}
+          <div className="hidden sm:block sm:mt-0">
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white font-semibold rounded-md px-4 py-2 transition-all duration-300 flex items-center"
+              onClick={() => alert('Post New Item feature coming soon!')}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+              </svg>
+              <span>Add New Listing</span>
+            </button>
+          </div>
+
+          {/* Mobile Add Button - Gmail Style with Animation */}
+          <div className="sm:hidden fixed bottom-4 right-4 z-50">
+            <div className="relative">
+              <button
+                className={`bg-green-500 hover:bg-green-600 text-white rounded-full shadow-md flex items-center justify-center h-10 overflow-hidden transition-all duration-500 ease-out ${isScrolled && isScrolling ? 'w-[110px]' : 'w-10'}`}
+                onClick={() => alert('Post New Item feature coming soon!')}
+                aria-label="Add New Item"
+              >
+                <div className="flex items-center justify-center w-10 h-10 absolute left-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div
+                  className={`ml-10 pr-3 transition-all duration-500 ease-out ${isScrolled && isScrolling ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                >
+                  <span className="font-medium text-sm whitespace-nowrap">New Item</span>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Search and View Options */}
-        <div className="sticky top-16 z-10 bg-white dark:bg-gray-800 rounded-lg p-4 mb-6 transition-all duration-300">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="sticky top-16 z-10 bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 mb-6 transition-all duration-300">
+          <div className="flex flex-col gap-3 sm:gap-4">
             {/* Search */}
-            <div className="relative flex-grow max-w-2xl">
+            <div className="relative w-full">
               <input
                 type="text"
                 id="search"
-                className="w-full px-4 py-2 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white transition-all duration-300"
-                placeholder="Search items by keyword..."
+                className="w-full h-10 px-3 py-1.5 pl-9 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white transition-all duration-300 text-sm sm:text-base"
+                placeholder="Search items..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                <svg className="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -303,7 +343,7 @@ export default function GiveawaysPage() {
                   onClick={() => setSearchQuery('')}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-400 hover:text-gray-600"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                 </button>
@@ -311,22 +351,22 @@ export default function GiveawaysPage() {
             </div>
 
             {/* View and Sort Options */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between">
               {/* View Type Toggle */}
               <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-md p-1">
                 <button
                   onClick={() => setViewType('grid')}
-                  className={`p-1.5 rounded-md ${viewType === 'grid' ? 'bg-white dark:bg-gray-600' : 'text-gray-500 dark:text-gray-400'} cursor-pointer`}
+                  className={`p-1 rounded-md ${viewType === 'grid' ? 'bg-white dark:bg-gray-600' : 'text-gray-500 dark:text-gray-400'} cursor-pointer`}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                   </svg>
                 </button>
                 <button
                   onClick={() => setViewType('list')}
-                  className={`p-1.5 rounded-md ${viewType === 'list' ? 'bg-white dark:bg-gray-600' : 'text-gray-500 dark:text-gray-400'} cursor-pointer`}
+                  className={`p-1 rounded-md ${viewType === 'list' ? 'bg-white dark:bg-gray-600' : 'text-gray-500 dark:text-gray-400'} cursor-pointer`}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
                   </svg>
                 </button>
@@ -337,7 +377,7 @@ export default function GiveawaysPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 py-2 px-4 pr-8 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer"
+                  className="appearance-none bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 py-1.5 px-2 sm:py-2 sm:px-4 pr-7 sm:pr-8 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary cursor-pointer text-xs sm:text-sm"
                 >
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
@@ -345,8 +385,8 @@ export default function GiveawaysPage() {
                   <option value="price-high">Price: High to Low</option>
                   <option value="alphabetical">Alphabetical</option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 sm:px-2 text-gray-700 dark:text-gray-300">
+                  <svg className="fill-current h-3 w-3 sm:h-4 sm:w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
                 </div>
@@ -354,62 +394,7 @@ export default function GiveawaysPage() {
             </div>
           </div>
 
-          {/* Filter Toggle Button */}
-          <div className="mt-4 flex justify-end items-center">
-            <button
-              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              className="text-primary hover:text-primary-dark flex items-center space-x-1 text-sm font-medium cursor-pointer transition-colors duration-200"
-            >
-              <span>{showAdvancedFilters ? 'Hide Filters' : 'Show Filters'}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className={`h-4 w-4 transition-transform duration-300 ${showAdvancedFilters ? 'transform rotate-180' : ''}`}
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-
-          {/* Advanced Filters */}
-          {showAdvancedFilters && (
-            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 animate-fadeIn">
-              <div className="grid grid-cols-1 gap-6">
-                {/* Categories */}
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Categories</h3>
-                  <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-                    {allCategories.map(category => (
-                      <label key={category} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          className="h-4 w-4 text-primary focus:ring-0 border-gray-300 rounded cursor-pointer"
-                          checked={selectedCategories.includes(category)}
-                          onChange={() => toggleCategory(category)}
-                        />
-                        <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">{category}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Reset Filters Button */}
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={resetFilters}
-                  className="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium transition-colors duration-200 cursor-pointer"
-                >
-                  Reset All Filters
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Filters removed as requested */}
         </div>
 
         {/* Results Count */}
@@ -583,13 +568,13 @@ export default function GiveawaysPage() {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">No items found matching your criteria.</p>
-            <p className="mt-2 text-gray-500 dark:text-gray-400">Try adjusting your filters or check back later.</p>
+            <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">No items found matching your search.</p>
+            <p className="mt-2 text-gray-500 dark:text-gray-400">Try a different search term or check back later.</p>
             <button
-              onClick={resetFilters}
+              onClick={() => setSearchQuery('')}
               className="mt-4 px-4 py-2 bg-white dark:bg-gray-700 text-primary border border-primary hover:bg-primary hover:text-white rounded-md text-sm font-medium transition-colors duration-200 cursor-pointer"
             >
-              Reset All Filters
+              Clear Search
             </button>
           </div>
         )}
