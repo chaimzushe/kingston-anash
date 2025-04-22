@@ -10,8 +10,7 @@ export const revalidate = 60;
 export async function GET(request: NextRequest) {
   try {
     // Get the current user from Clerk
-    const authResult = await auth();
-    const userId = authResult?.userId;
+    const { userId } = auth();
 
     if (!userId) {
       return NextResponse.json(

@@ -8,5 +8,6 @@ import accessRequest from './accessRequest'
 import user from './user'
 import passwordReset from './passwordReset'
 import communityEvent from './communityEvent'
+import giveaway from './giveaway'
 
-export const schemaTypes = [post, author, category, blockContent, subscription, pushSubscription, accessRequest, user, passwordReset, communityEvent]
+export const schemaTypes = [post, author, category, blockContent, subscription, pushSubscription, accessRequest, user, passwordReset, communityEvent, giveaway]

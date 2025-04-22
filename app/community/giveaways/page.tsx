@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import { PageHeader } from '@/components/layout';
 import GiveawayCard from '@/components/giveaways/GiveawayCard';
 import ImageGallery from '@/components/giveaways/ImageGallery';
@@ -279,24 +280,26 @@ export default function GiveawaysPage() {
             subtitle="Browse items available from community members"
           />
           {/* Desktop Post Button */}
+
+
           <div className="hidden sm:block sm:mt-0">
-            <button
-              className="bg-green-500 hover:bg-green-600 text-white font-semibold rounded-md px-4 py-2 transition-all duration-300 flex items-center"
-              onClick={() => alert('Post New Item feature coming soon!')}
+            <Link
+              href="/community/giveaways/new"
+              className="bg-gradient-primary text-white font-semibold rounded-md shadow-sm hover:opacity-90 hover:shadow-md px-4 py-2 transition-all duration-200 flex items-center"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
               </svg>
               <span>Add New Listing</span>
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Add Button - Gmail Style with Animation */}
           <div className="sm:hidden fixed bottom-4 right-4 z-50">
             <div className="relative">
-              <button
-                className={`bg-green-500 hover:bg-green-600 text-white rounded-full shadow-md flex items-center justify-center h-10 overflow-hidden transition-all duration-500 ease-out ${isScrolled && isScrolling ? 'w-[110px]' : 'w-10'}`}
-                onClick={() => alert('Post New Item feature coming soon!')}
+              <Link
+                href="/community/giveaways/new"
+                className={`bg-gradient-primary text-white rounded-full shadow-md flex items-center justify-center h-10 overflow-hidden transition-all duration-500 ease-out ${isScrolled && isScrolling ? 'w-[110px]' : 'w-10'}`}
                 aria-label="Add New Item"
               >
                 <div className="flex items-center justify-center w-10 h-10 absolute left-0">
@@ -315,7 +318,7 @@ export default function GiveawaysPage() {
                 >
                   <span className="font-medium text-sm whitespace-nowrap">New Item</span>
                 </div>
-              </button>
+              </Link>
             </div>
           </div>
         </div>
