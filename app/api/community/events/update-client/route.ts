@@ -95,38 +95,12 @@ export async function PATCH(request: NextRequest) {
       } catch (sanityError) {
         console.error('Error updating event in Sanity:', sanityError);
 
-        // Create a mock updated event as fallback
-        const mockUpdatedEvent = {
-          _id: eventId,
-          _type: 'communityEvent',
-          ...updates,
-          creator: { id: userId },
-          updatedAt: new Date().toISOString()
-        };
-
-        console.log('Created mock updated event as fallback:', mockUpdatedEvent);
-
-        // Revalidate relevant paths
-        const pathsToRevalidate = [
-          '/community/events',
-          '/api/community/events',
-          '/profile'
-        ];
-
-        // Revalidate each path
-        pathsToRevalidate.forEach(path => {
-          console.log(`Revalidating path: ${path}`);
-          revalidatePath(path);
-        });
-
-        // Return success response with mock event
+        // Return error response
         return NextResponse.json({
-          message: 'Event updated as mock (Sanity unavailable)',
-          event: mockUpdatedEvent,
-          timestamp: new Date().toISOString(),
-          source: 'mock-fallback',
-          revalidated: pathsToRevalidate
-        });
+          message: 'Error updating event in Sanity',
+          error: sanityError instanceof Error ? sanityError.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 500 });
       }
     } catch (error) {
       console.error('Error in update-client API:', error);

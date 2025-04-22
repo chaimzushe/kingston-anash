@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sanityWriteClient } from '@/lib/sanity';
-import { addMockEvent } from '@/lib/mockEvents';
 
 export async function POST(request: NextRequest) {
   try {
@@ -111,17 +110,11 @@ export async function POST(request: NextRequest) {
     } catch (error) {
       console.error('Error creating event in Sanity:', error);
 
-      // For testing, create and store a mock event if Sanity fails
-      const mockEvent = { _id: `mock-${Date.now()}`, ...eventData };
-      console.log('Falling back to mock event:', mockEvent);
-
-      // Store the mock event
-      addMockEvent(mockEvent);
-
+      // Return error response
       return NextResponse.json({
-        message: 'Event created successfully (mock)',
-        event: mockEvent
-      });
+        message: 'Error creating event in Sanity',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      }, { status: 500 });
     }
   } catch (error) {
     console.error('Error creating community event:', error);

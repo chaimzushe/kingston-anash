@@ -73,30 +73,12 @@ export async function DELETE(request: NextRequest) {
     } catch (sanityError) {
       console.error('Error deleting event in Sanity:', sanityError);
 
-      // Create a mock deleted event as fallback
-      console.log('Created mock deleted event as fallback for event ID:', eventId);
-
-      // Revalidate relevant paths
-      const pathsToRevalidate = [
-        '/community/events',
-        '/api/community/events',
-        '/profile'
-      ];
-
-      // Revalidate each path
-      pathsToRevalidate.forEach(path => {
-        console.log(`Revalidating path: ${path}`);
-        revalidatePath(path);
-      });
-
-      // Return success response with mock event
+      // Return error response
       return NextResponse.json({
-        message: 'Event deleted as mock (Sanity unavailable)',
-        eventId,
-        timestamp: new Date().toISOString(),
-        source: 'mock-fallback',
-        revalidated: pathsToRevalidate
-      });
+        message: 'Error deleting event in Sanity',
+        error: sanityError instanceof Error ? sanityError.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      }, { status: 500 });
     }
   } catch (error) {
     console.error('Error deleting event:', error);

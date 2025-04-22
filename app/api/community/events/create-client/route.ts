@@ -84,36 +84,12 @@ export async function POST(request: NextRequest) {
       } catch (sanityError) {
         console.error('Error creating event in Sanity:', sanityError);
 
-        // Create a mock event with a unique ID as fallback
-        const mockId = `mock-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-        const mockEvent = {
-          ...eventDocument,
-          _id: mockId,
-        };
-
-        console.log('Created mock event as fallback:', mockEvent);
-
-        // Revalidate relevant paths
-        const pathsToRevalidate = [
-          '/community/events',
-          '/api/community/events',
-          '/profile'
-        ];
-
-        // Revalidate each path
-        pathsToRevalidate.forEach(path => {
-          console.log(`Revalidating path: ${path}`);
-          revalidatePath(path);
-        });
-
-        // Return success response with mock event
+        // Return error response
         return NextResponse.json({
-          message: 'Event created as mock (Sanity unavailable)',
-          event: mockEvent,
-          timestamp: new Date().toISOString(),
-          source: 'mock-fallback',
-          revalidated: pathsToRevalidate
-        });
+          message: 'Error creating event in Sanity',
+          error: sanityError instanceof Error ? sanityError.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 500 });
       }
     } catch (error) {
       console.error('Error in create-client API:', error);

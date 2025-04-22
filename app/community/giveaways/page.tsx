@@ -4,9 +4,42 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/layout';
 import GiveawayCard from '@/components/giveaways/GiveawayCard';
-import { dummyGiveaways } from '@/data/giveawaysData';
 import { Giveaway } from '@/types/giveaways';
 import { useUser } from '@clerk/nextjs';
+
+// Sample giveaways data
+const sampleGiveaways: Giveaway[] = [
+  {
+    id: '1',
+    title: 'Baby Crib with Mattress',
+    description: 'Wooden baby crib in good condition. Includes mattress and two fitted sheets.',
+    condition: 'Good',
+    category: 'Baby & Kids',
+    location: 'Kingston Heights',
+    contactName: 'Sarah Goldstein',
+    contactEmail: 'example@example.com',
+    postedDate: new Date().toISOString(),
+    isAvailable: true,
+    tags: ['Furniture', 'Baby'],
+    price: 0,
+    isFree: true
+  },
+  {
+    id: '2',
+    title: 'Kitchen Table with 4 Chairs',
+    description: 'Wooden kitchen table with four matching chairs. Some minor scratches but overall in good condition.',
+    condition: 'Good',
+    category: 'Furniture',
+    location: 'Downtown Kingston',
+    contactName: 'David Levy',
+    contactEmail: 'example@example.com',
+    postedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    isAvailable: true,
+    tags: ['Furniture', 'Kitchen'],
+    price: 75,
+    isFree: false
+  }
+];
 
 export default function GiveawaysPage() {
   const router = useRouter();
@@ -26,10 +59,10 @@ export default function GiveawaysPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Get unique categories from giveaways (for future use if needed)
-  const categories = Array.from(new Set(dummyGiveaways.map(g => g.category)));
+  const categories = Array.from(new Set(sampleGiveaways.map(g => g.category)));
 
   // Filter giveaways based on state
-  const filteredGiveaways = dummyGiveaways.filter((giveaway: Giveaway) => {
+  const filteredGiveaways = sampleGiveaways.filter((giveaway: Giveaway) => {
     // Filter by availability
     if (showAvailableOnly && !giveaway.isAvailable) {
       return false;

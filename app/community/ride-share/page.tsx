@@ -4,9 +4,52 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { PageHeader } from '@/components/layout';
 import RideShareCard from '@/components/rideShare/RideShareCard';
-import { dummyRideShares } from '@/data/rideShareData';
 import { RideShare } from '@/types/rideShare';
 import { useUser } from '@clerk/nextjs';
+
+// Helper function to create dates relative to today
+const getRelativeDate = (dayOffset: number): string => {
+  const date = new Date();
+  date.setDate(date.getDate() + dayOffset);
+  return date.toISOString().split('T')[0];
+};
+
+// Sample ride share data
+const sampleRideShares: RideShare[] = [
+  {
+    id: '1',
+    driverName: 'Moshe Cohen',
+    origin: 'Kingston',
+    destination: 'Brooklyn, NY',
+    departureDate: getRelativeDate(1), // Tomorrow
+    departureTime: '08:00',
+    returnDate: getRelativeDate(1), // Same day return
+    returnTime: '18:00',
+    availableSeats: 3,
+    pricePerSeat: 20,
+    contactPhone: '(845) 555-1234',
+    contactEmail: 'example@example.com',
+    notes: 'Leaving from Kingston Heights. Will make stops in Monsey if needed.',
+    isRoundTrip: true,
+    vehicleType: 'SUV',
+    postedDate: new Date().toISOString()
+  },
+  {
+    id: '2',
+    driverName: 'Sarah Goldberg',
+    origin: 'Kingston',
+    destination: 'Monsey, NY',
+    departureDate: getRelativeDate(2), // Day after tomorrow
+    departureTime: '10:30',
+    availableSeats: 2,
+    pricePerSeat: 15,
+    contactPhone: '(845) 555-5678',
+    notes: 'Leaving from downtown Kingston. No stops along the way.',
+    isRoundTrip: false,
+    vehicleType: 'Sedan',
+    postedDate: new Date().toISOString()
+  }
+];
 
 export default function RideSharePage() {
   const router = useRouter();
@@ -26,10 +69,10 @@ export default function RideSharePage() {
   const [selectedDate, setSelectedDate] = useState<string>('');
 
   // Get unique destinations from rides
-  const destinations = Array.from(new Set(dummyRideShares.map(ride => ride.destination)));
+  const destinations = Array.from(new Set(sampleRideShares.map(ride => ride.destination)));
 
   // Filter rides based on state
-  const filteredRides = dummyRideShares.filter((ride: RideShare) => {
+  const filteredRides = sampleRideShares.filter((ride: RideShare) => {
     // Filter by destination
     if (destination && ride.destination !== destination) {
       return false;

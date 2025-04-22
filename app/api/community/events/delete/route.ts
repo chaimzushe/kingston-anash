@@ -70,30 +70,12 @@ export async function DELETE(request: NextRequest) {
       } catch (sanityError) {
         console.error('Error deleting event from Sanity:', sanityError);
 
-        // Since we can't delete from Sanity, we'll pretend we did for the UI
-        // In a real app, you might want to queue this for later deletion
-
-        // Revalidate relevant paths
-        const pathsToRevalidate = [
-          '/community/events',
-          '/api/community/events',
-          '/profile'
-        ];
-
-        // Revalidate each path
-        pathsToRevalidate.forEach(path => {
-          console.log(`Revalidating path: ${path}`);
-          revalidatePath(path);
-        });
-
-        // Return success response anyway to keep the UI working
+        // Return error response
         return NextResponse.json({
-          message: 'Event marked as deleted (Sanity unavailable)',
-          eventId,
-          timestamp: new Date().toISOString(),
-          source: 'mock-fallback',
-          revalidated: pathsToRevalidate
-        });
+          message: 'Error deleting event from Sanity',
+          error: sanityError instanceof Error ? sanityError.message : 'Unknown error',
+          timestamp: new Date().toISOString()
+        }, { status: 500 });
       }
     } catch (error) {
       console.error('Error in delete API:', error);

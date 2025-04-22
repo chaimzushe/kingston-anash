@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sanityClient } from '@/lib/sanity';
-import { getMockEvents } from '@/lib/mockEvents';
 import { Event } from '@/types/events';
 import { auth } from '@clerk/nextjs/server';
 
@@ -40,18 +39,8 @@ export async function GET(request: NextRequest) {
       // Fetch events from Sanity
       const sanityEvents = await sanityClient.fetch(query, { userId });
 
-      // Get mock events from localStorage (client-side only)
-      // Since getMockEvents uses localStorage which is browser-only,
-      // we can't use it directly in the API route
-      const mockEvents: Event[] = [];
-
-      // Filter mock events by creator
-      const userMockEvents = mockEvents.filter(event =>
-        event.creator && event.creator.id === userId
-      );
-
-      // Combine Sanity events and mock events
-      const allEvents = [...sanityEvents, ...userMockEvents];
+      // Use only Sanity events
+      const allEvents = [...sanityEvents];
 
       // Sort events by date (descending) and start time
       const sortedEvents = allEvents.sort((a, b) => {
@@ -69,14 +58,15 @@ export async function GET(request: NextRequest) {
     } catch (sanityError) {
       console.error('Error fetching from Sanity:', sanityError);
 
-      // If Sanity fails, fall back to mock events only
-      const mockEvents = getMockEvents().filter(event =>
-        event.creator && event.creator.id === userId
-      );
+      // If Sanity fails, return empty array
+      console.log(`Returning empty events array due to Sanity API error for user ${userId}`);
 
-      console.log(`Falling back to ${mockEvents.length} mock events for user ${userId}`);
-
-      return NextResponse.json({ events: mockEvents });
+      return NextResponse.json({
+        events: [],
+        timestamp: new Date().toISOString(),
+        source: 'sanity-api-error',
+        message: 'Error connecting to Sanity API'
+      });
     }
   } catch (error) {
     console.error('Error fetching user events:', error);
