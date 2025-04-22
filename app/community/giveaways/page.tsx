@@ -212,7 +212,7 @@ export default function GiveawaysPage() {
       return (
         giveaway.title.toLowerCase().includes(query) ||
         giveaway.description.toLowerCase().includes(query) ||
-        giveaway.category.toLowerCase().includes(query) ||
+        (giveaway.category ? giveaway.category.toLowerCase().includes(query) : false) ||
         giveaway.location.toLowerCase().includes(query) ||
         giveaway.tags?.some(tag => tag.toLowerCase().includes(query))
       );

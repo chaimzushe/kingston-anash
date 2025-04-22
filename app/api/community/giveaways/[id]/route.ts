@@ -2,13 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { sanityClient } from '@/lib/sanity';
 import { groq } from 'next-sanity';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
+  // Extract the id from the URL
+  const url = new URL(request.url);
+  const id = url.pathname.split('/').pop();
   try {
-    const id = params.id;
-    
+
     if (!id) {
       return NextResponse.json({ error: 'Missing giveaway ID' }, { status: 400 });
     }

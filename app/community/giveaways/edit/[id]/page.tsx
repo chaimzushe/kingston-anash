@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { redirect, useRouter } from 'next/navigation';
+import { redirect, useRouter, useParams } from 'next/navigation';
 import { PageHeader } from '@/components/layout';
 import GiveawayForm from '@/components/giveaways/GiveawayForm';
 import { Giveaway } from '@/types/giveaways';
 
-export default function EditGiveawayPage({ params }: { params: { id: string } }) {
+export default function EditGiveawayPage() {
+  const params = useParams();
+  const id = params.id as string;
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
   const [giveaway, setGiveaway] = useState<Giveaway | null>(null);
@@ -18,12 +20,12 @@ export default function EditGiveawayPage({ params }: { params: { id: string } })
   useEffect(() => {
     const fetchGiveaway = async () => {
       try {
-        const response = await fetch(`/api/community/giveaways/${params.id}`);
-        
+        const response = await fetch(`/api/community/giveaways/${id}`);
+
         if (!response.ok) {
           throw new Error('Failed to fetch giveaway');
         }
-        
+
         const data = await response.json();
         setGiveaway(data);
       } catch (error) {
@@ -34,14 +36,14 @@ export default function EditGiveawayPage({ params }: { params: { id: string } })
       }
     };
 
-    if (isSignedIn && params.id) {
+    if (isSignedIn && id) {
       fetchGiveaway();
     }
-  }, [isSignedIn, params.id]);
+  }, [isSignedIn, id]);
 
   // Redirect if not signed in
   if (isLoaded && !isSignedIn) {
-    redirect(`/sign-in?redirect=/community/giveaways/edit/${params.id}`);
+    redirect(`/sign-in?redirect=/community/giveaways/edit/${id}`);
   }
 
   // Check if user has permission to edit
@@ -98,7 +100,7 @@ export default function EditGiveawayPage({ params }: { params: { id: string } })
           title="Edit Item"
           subtitle="Update your listing"
         />
-        
+
         <div className="mt-8">
           {giveaway && (
             <GiveawayForm

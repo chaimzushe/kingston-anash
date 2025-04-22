@@ -5,7 +5,8 @@ import { auth } from '@clerk/nextjs/server';
 export async function PATCH(request: NextRequest) {
   try {
     // Get the current user from Clerk
-    const { userId } = auth();
+    const session = await auth();
+    const userId = session.userId;
 
     if (!userId) {
       return NextResponse.json(

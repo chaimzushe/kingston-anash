@@ -4,7 +4,8 @@ import { auth } from '@clerk/nextjs/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = auth();
+    const session = await auth();
+    const userId = session.userId;
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare the document
-    const doc = {
+    const doc: any = {
       _type: 'giveaway',
       title: data.title,
       description: data.description,

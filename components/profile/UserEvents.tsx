@@ -10,7 +10,7 @@ interface UserEventsProps {
   userId: string;
 }
 
-const UserEvents: React.FC<UserEventsProps> = ({ userId }) => {
+const UserEvents: React.FC<any> = ({ userId }) => {
   const { user } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);

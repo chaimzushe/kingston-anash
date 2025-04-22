@@ -11,7 +11,7 @@ import { Giveaway } from '@/types/giveaways';
 export default function UserListingsPage() {
   const { isLoaded, isSignedIn, user } = useUser();
   const router = useRouter();
-  const [listings, setListings] = useState<Giveaway[]>([]);
+  const [listings, setListings] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteId, setDeleteId] = useState<string | null>(null);

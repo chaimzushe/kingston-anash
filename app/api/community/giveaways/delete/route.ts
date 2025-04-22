@@ -5,7 +5,8 @@ import { groq } from 'next-sanity';
 
 export async function DELETE(request: NextRequest) {
   try {
-    const { userId } = auth();
+    const session = await auth();
+    const userId = session.userId;
 
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
