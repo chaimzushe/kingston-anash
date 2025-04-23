@@ -15,4 +15,6 @@ export interface RideShare {
   isRoundTrip: boolean;
   vehicleType?: string;
   postedDate: string; // ISO date string
+  userId?: string; // ID of the user who created the ride
+  userEmail?: string; // Email of the user who created the ride
 }

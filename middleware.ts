@@ -15,6 +15,10 @@ const PROTECTED_ROUTES = [
   '/api/community/events/update',
   '/api/community/events/delete',
   '/api/community/events/user',
+  '/api/community/giveaways/create',
+  '/api/community/giveaways/update',
+  '/api/community/giveaways/delete',
+  '/api/upload',
   '/events',
 ];
 

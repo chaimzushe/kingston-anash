@@ -3,14 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { Event } from '@/types/events';
 import { useUser } from '@clerk/nextjs';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import EventForm from '@/components/events/EventForm';
 
 interface UserEventsProps {
   userId: string;
+  limit?: number;
 }
 
-const UserEvents: React.FC<any> = ({ userId }) => {
+const UserEvents: React.FC<UserEventsProps> = ({ userId, limit }) => {
   const { user } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -306,16 +307,18 @@ const UserEvents: React.FC<any> = ({ userId }) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Your Events</h2>
+      {!limit && (
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Your Events</h2>
 
-        <button
-          onClick={() => setShowCreateForm(!showCreateForm)}
-          className="text-sm px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors duration-200 cursor-pointer"
-        >
-          {showCreateForm ? 'Cancel' : 'Create New Event'}
-        </button>
-      </div>
+          <button
+            onClick={() => setShowCreateForm(!showCreateForm)}
+            className="text-sm px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors duration-200 cursor-pointer"
+          >
+            {showCreateForm ? 'Cancel' : 'Create New Event'}
+          </button>
+        </div>
+      )}
 
       {showCreateForm && (
         <div className="mt-4">
@@ -339,88 +342,128 @@ const UserEvents: React.FC<any> = ({ userId }) => {
           </button>
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+        <div className="overflow-hidden">
           {events.length === 0 ? (
-            <div className="p-8 text-center">
-              <p className="text-gray-500 dark:text-gray-400">You haven't created any events yet.</p>
-              <button
-                onClick={() => setShowCreateForm(true)}
-                className="mt-4 text-sm px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors duration-200 cursor-pointer"
-              >
-                Create Your First Event
-              </button>
+            <div className="p-8 text-center bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+              <div className="inline-block p-4 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
+                <CalendarIcon className="h-8 w-8 text-gray-400" />
+              </div>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">You haven't created any events yet.</p>
+              {!limit && (
+                <button
+                  onClick={() => setShowCreateForm(true)}
+                  className="px-4 py-2 bg-gradient-primary text-white rounded-full font-medium shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
+                >
+                  Create Your First Event
+                </button>
+              )}
             </div>
           ) : (
-            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-              {events.map(event => (
-                <li key={event._id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-750">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white uppercase tracking-wide">
-                        {event.title}
-                      </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Date: {formatDate(event.date)}
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                        Time: {event.startTime}
-                      </p>
-                      {event.location && (
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                          Location: {event.location}
-                        </p>
-                      )}
-                      {event.description && (
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                          {event.description}
-                        </p>
-                      )}
-                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                        ID: {event._id}
-                      </p>
-                    </div>
+            <div className="space-y-3">
+              {(limit ? events.slice(0, limit) : events).map(event => {
+                // Check if event is in the past
+                const isPast = new Date(event.date) < new Date(new Date().setHours(0, 0, 0, 0));
 
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => setEditingEvent(event)}
-                        className="p-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer"
-                        aria-label="Edit event"
-                      >
-                        <PencilIcon className="h-5 w-5" />
-                      </button>
+                return (
+                  <div
+                    key={event._id}
+                    className={`relative rounded-lg overflow-hidden transition-all duration-300 ${limit ? '' : 'hover:shadow-md transform hover:-translate-y-1'} ${
+                      isPast ? 'opacity-70' : ''
+                    }`}
+                  >
+                    {/* Colored top border based on event type */}
+                    <div className="h-1.5 bg-gradient-primary w-full absolute top-0 left-0"></div>
 
-                      {showConfirmDelete === event._id ? (
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleDeleteEvent(event._id)}
-                            disabled={isDeleting === event._id}
-                            className={`text-xs px-2 py-1 bg-red-600 text-white rounded cursor-pointer ${
-                              isDeleting === event._id ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'
-                            }`}
-                          >
-                            {isDeleting === event._id ? 'Deleting...' : 'Confirm'}
-                          </button>
-                          <button
-                            onClick={() => setShowConfirmDelete(null)}
-                            className="text-xs px-2 py-1 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer"
-                          >
-                            Cancel
-                          </button>
+                    <div className="p-4 pt-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <div className="flex items-center mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                              {event.title}
+                            </h3>
+                            {isPast && (
+                              <span className="ml-2 text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">
+                                Past
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex flex-wrap gap-y-1 gap-x-4 text-sm">
+                            <div className="flex items-center text-gray-600 dark:text-gray-300">
+                              <CalendarIcon className="h-4 w-4 mr-1 text-primary/70" />
+                              {formatDate(event.date)}
+                            </div>
+
+                            <div className="flex items-center text-gray-600 dark:text-gray-300">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-primary/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              {formatTime(event.startTime)}
+                            </div>
+
+                            {event.location && (
+                              <div className="flex items-center text-gray-600 dark:text-gray-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-primary/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                {event.location}
+                              </div>
+                            )}
+                          </div>
+
+                          {event.description && (
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 line-clamp-2">
+                              {event.description}
+                            </p>
+                          )}
                         </div>
-                      ) : (
-                        <button
-                          onClick={() => setShowConfirmDelete(event._id)}
-                          className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 cursor-pointer"
-                          aria-label="Delete event"
-                        >
-                          <TrashIcon className="h-5 w-5" />
-                        </button>
-                      )}
+
+                        {!limit && (
+                          <div className="flex space-x-1 ml-2">
+                            <button
+                              onClick={() => setEditingEvent(event)}
+                              className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
+                              aria-label="Edit event"
+                            >
+                              <PencilIcon className="h-4 w-4" />
+                            </button>
+
+                            {showConfirmDelete === event._id ? (
+                              <div className="flex items-center space-x-1">
+                                <button
+                                  onClick={() => handleDeleteEvent(event._id)}
+                                  disabled={isDeleting === event._id}
+                                  className={`text-xs px-2 py-1 bg-red-600 text-white rounded cursor-pointer ${
+                                    isDeleting === event._id ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-700'
+                                  }`}
+                                >
+                                  {isDeleting === event._id ? 'Deleting...' : 'Confirm'}
+                                </button>
+                                <button
+                                  onClick={() => setShowConfirmDelete(null)}
+                                  className="text-xs px-2 py-1 bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 cursor-pointer"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setShowConfirmDelete(event._id)}
+                                className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                                aria-label="Delete event"
+                              >
+                                <TrashIcon className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
+                );
+              })}
+            </div>
           )}
         </div>
       )}

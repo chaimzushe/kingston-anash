@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sanityClient } from '@/lib/sanity';
 import { Event } from '@/types/events';
-import { auth } from '@clerk/nextjs/server';
+import { getAuth } from '@clerk/nextjs/server';
 
 // Set revalidation time to 60 seconds
 export const revalidate = 60;
@@ -10,8 +10,7 @@ export const revalidate = 60;
 export async function GET(request: NextRequest) {
   try {
     // Get the current user from Clerk
-    const session = await auth();
-    const userId = session.userId;
+    const { userId } = getAuth(request);
 
     if (!userId) {
       return NextResponse.json(

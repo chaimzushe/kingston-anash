@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sanityWriteClient } from '@/lib/sanity';
-import { auth } from '@clerk/nextjs/server';
+import { getAuth } from '@clerk/nextjs/server';
 
 export async function PATCH(request: NextRequest) {
   try {
     // Get the current user from Clerk
-    const session = await auth();
-    const userId = session.userId;
+    const { userId } = getAuth(request);
 
     if (!userId) {
       return NextResponse.json(

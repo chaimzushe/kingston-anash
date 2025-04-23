@@ -22,10 +22,18 @@ export const config = {
 console.log('Using Sanity project ID:', config.projectId);
 
 // Client for fetching data (read-only)
-export const sanityClient = createClient(config);
+export const sanityClient = createClient({
+  ...config,
+  useCdn: false, // Always use the API for fresh content
+  token: process.env.SANITY_API_TOKEN, // Include token for write operations
+});
 
 // Client for mutations (with token for write operations)
-export const sanityWriteClient = createClient(config);
+export const sanityWriteClient = createClient({
+  ...config,
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN,
+});
 
 // Helper function for generating image URLs with the Sanity Image Pipeline
 const builder = imageUrlBuilder(sanityClient);

@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sanityClient } from '@/lib/sanity';
-import { auth } from '@clerk/nextjs/server';
+import { requireAuth } from '@/lib/auth-utils';
 import { groq } from 'next-sanity';
 
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await auth();
-    const userId = session.userId;
+    const authResult = await requireAuth(request);
 
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!authResult.success) {
+      return authResult.response;
     }
+
+    const userId = authResult.userId;
 
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
