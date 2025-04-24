@@ -32,7 +32,7 @@ export const dropdownMenus: DropdownItem[] = [
       { label: 'Bais moshe', href: '/minyanim/bm' },
       { label: 'Cheder sheni', href: '/minyanim/cheder-sheni' },
       { label: 'Deli Minyan', href: '/minyanim/deli-minyan' },
-      { label: 'Bais Tzvi Yosef', href: '/minyanim/bty' }
+      { label: 'Bais Tzvi Yosef', href: '/minyanim/bais-tzvi-yosef' },
     ]
   }
 ];

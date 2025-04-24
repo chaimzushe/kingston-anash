@@ -1,7 +1,6 @@
 export interface MinyanTime {
   sunday?: string;
-  mondayToThursday?: string;
-  friday?: string;
+  mondayToFriday?: string;
   shabbos?: string;
 }
 
@@ -13,157 +12,187 @@ export interface Minyan {
   website?: string;
   phone?: string;
   rabbi?: string;
+  shabbosOnly?: boolean;
+  chassidus?: MinyanTime;
   shachris: MinyanTime;
   mincha: MinyanTime;
   maariv: MinyanTime;
+  shiurim?: {
+    title: string;
+    time: string;
+    description?: string;
+    rabbi?: string;
+  }[];
   shabbos: {
-    candleLighting?: string;
     kabbalatShabbat?: string;
     shachris?: string;
     mincha?: string;
-    maariv?: string;
-    havdalah?: string;
+    farbrengen?: string;
   };
 }
 
-export const minyanim: Minyan[] = [
+export const minyanim: any[] = [
+
   {
     id: "bm",
     name: "Bais moshe",
     address: "425 Tioga Ave, Kingston, PA 18704",
-    imageUrl: "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    imageUrl: "https://files.anash.org/uploads/2023/05/WhatsApp-Image-2023-04-27-at-9.38.26-PM.jpg",
     website: "https://www.baismoshe.com/",
     phone: "(570) 561-4555",
     rabbi: "Rabbi Gedalia Oberlnader",
+    chassidus: {
+      sunday: "7:45 AM",
+      mondayToFriday: "6:30 AM",
+      shabbos: "9:00 AM"
+    },
     shachris: {
       sunday: "7:00 AM, 8:30 AM, 9:00 AM, 10:00 AM",
-      mondayToThursday: "7:00 AM, 7:15 AM, 8:15 AM",
-      friday: "7:00 AM, 7:15 AM, 8:15 AM",
+      mondayToFriday: "7:00 AM, 7:15 AM, 8:15 AM",
       shabbos: "10:00 AM"
     },
     mincha: {
-      sunday: "1:45 PM, 3:15 PM (Winter), 7:00 PM (Summer)",
-      mondayToThursday: "1:45 PM, 3:15 PM (Winter), 7:00 PM (Summer)",
-      friday: "Before Kabbalat Shabbat",
-      shabbos: "Varies by week - check bulletin"
+      sunday: "25 minutes before sunset, 15 minutes before sunset",
+      mondayToFriday: "25 minutes before sunset, 15 minutes before sunset",
+      shabbos: "Candle lighting"
     },
     maariv: {
-      sunday: "After Mincha, 9:30 PM",
-      mondayToThursday: "After Mincha, 9:30 PM",
-      friday: "After Kabbalat Shabbat",
-      shabbos: "Varies by week - check bulletin"
+      sunday: "Tzais, 9:30 PM",
+      mondayToFriday: "Tzais, 9:30 PM",
+      shabbos: "Bzman"
     },
+    shiurim: [
+      {
+        title: "Likutei Sichos",
+        time: "8:45 AM Sunday",
+        description: "Project Likutei Sichos",
+        rabbi: "Rabbi Mendel Gorman"
+      },
+      {
+        title: "Sunday Kolel",
+        time: "9:15 AM",
+        description: "Weekly sunday kollel",
+        rabbi: "Assorted"
+      }
+    ],
     shabbos: {
-      candleLighting: "Varies by week - check bulletin",
-      kabbalatShabbat: "Varies by week - check bulletin",
+      kabbalatShabbat: "Bzman",
       shachris: "10:00 AM",
-      mincha: "Varies by week - check bulletin",
-      maariv: "Varies by week - check bulletin",
-      havdalah: "Varies by week - check bulletin"
+      mincha: "Candle Lighting",
+      farbrengen: "After Davening"
     }
   },
   {
     id: "cheder-sheni",
     name: "Cheder Sheni",
     address: "445 Wyoming Ave, Kingston, PA 18704",
-    imageUrl: "https://images.unsplash.com/photo-1575384043001-f37b8e8a2b81?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+    imageUrl: "https://cheder2.com/images/shul.jpg",
     phone: "(718) 735-0400",
     rabbi: "Rabbi Mendy Majesky",
+    chassidus: {
+      sunday: "7:30 AM",
+      mondayToFriday: "6:20 AM",
+      shabbos: "9:15 AM"
+    },
     shachris: {
       sunday: "8:00 AM",
-      mondayToThursday: "6:45 AM",
-      friday: "6:45 AM",
+      mondayToFriday: "6:45 AM",
       shabbos: "10:00 AM"
     },
     mincha: {
-      sunday: "2:30 PM (Winter), 7:15 PM (Summer)",
-      mondayToThursday: "2:30 PM (Winter), 7:15 PM (Summer)",
-      friday: "Before Kabbalat Shabbat",
-      shabbos: "Varies by week - check bulletin"
+      sunday: "n/a",
+      mondayToFriday: "n/a",
+      shabbos: "Candle lighting"
     },
     maariv: {
-      sunday: "After Mincha, 8:45 PM",
-      mondayToThursday: "After Mincha, 8:45 PM",
-      friday: "After Kabbalat Shabbat",
-      shabbos: "Varies by week - check bulletin"
+      sunday: "8:30 PM",
+      mondayToFriday: "8:30 PM",
+      shabbos: "Tzais"
     },
+    shiurim: [
+      {
+        title: "Ein Yaakov",
+        time: "After Maariv",
+        description: "Daily study of the Ein Yaakov",
+        rabbi: "Rabbi Mendy Majesky"
+      }
+    ],
     shabbos: {
-      candleLighting: "18 minutes before sunset",
       kabbalatShabbat: "10 minutes after candle lighting",
-      shachris: "9:00 AM",
+      shachris: "10:00 AM",
+      mincha: "Candle lighting",
+      farbrengen: "After Davening"
+    }
+  },
+  {
+    id: "bais-tzvi-yosef",
+    name: "Bais tzvi Yosef",
+    address: "17 2nd Ave, Kingston, PA 18704",
+    imageUrl: "https://static.wixstatic.com/media/626909_5236b528a4ee4fe09351f88a7781c208~mv2.png/v1/fill/w_960,h_752,al_c,q_85,usm_0.66_1.00_0.01/626909_5236b528a4ee4fe09351f88a7781c208~mv2.png",
+    phone: "(518) 496-0011",
+    rabbi: "Rabbi Mendel Serobransky",
+    shabbosOnly: true,
+    chassidus: {
+      shabbos: "8:30 AM"
+    },
+    shachris: {
+      shabbos: "9:30 AM"
+    },
+    mincha: {
+      shabbos: "Candle Lighting"
+    },
+    maariv: {
+      shabbos: "Bzman"
+    },
+    shiurim: [
+      {
+        title: "Shabbos Morning Chassidus",
+        time: "8:30 AM Shabbos",
+        description: "In-depth study of Chassidic teachings",
+        rabbi: "Rabbi Mendel Serobransky"
+      }
+    ],
+    shabbos: {
+      kabbalatShabbat: "10 minutes after candle lighting",
+      shachris: "9:30 AM",
       mincha: "Varies by week - check bulletin",
-      maariv: "50 minutes after sunset",
-      havdalah: "42 minutes after sunset"
+      farbrengen: "After Shabbos morning davening"
     }
   },
   {
     id: "deli-minyan",
-    name: "Bais tzvi Yosef",
-    address: "667 Eastern Parkway, Brooklyn, NY 11213",
-    imageUrl: "https://images.unsplash.com/photo-1594835898177-dd82f11e7a9e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    website: "https://www.oholeitorah.com",
+    name: "Deli Minyan",
+    shabbosOnly: true,
+    address: "445 Wyoming Ave, Kingston, PA 18704",
+    imageUrl: "https://crownheights.info/assets/2018/01/1-15.jpg",
     phone: "(718) 493-3996",
-    rabbi: "Rabbi Yisroel Belsky",
+    rabbi: "Rabbi Sholom Liane",
+    chassidus: {
+      sunday: "6:45 AM",
+      mondayToFriday: "6:00 AM",
+      shabbos: "9:30 AM"
+    },
     shachris: {
       sunday: "7:30 AM, 8:30 AM, 9:30 AM",
-      mondayToThursday: "7:00 AM, 8:00 AM",
-      friday: "7:00 AM, 8:00 AM",
-      shabbos: "9:30 AM"
+      mondayToFriday: "7:00 AM, 8:00 AM",
+      shabbos: "10:30 AM"
     },
     mincha: {
       sunday: "1:30 PM, 3:00 PM (Winter), 7:30 PM (Summer)",
-      mondayToThursday: "1:30 PM, 3:00 PM (Winter), 7:30 PM (Summer)",
-      friday: "Before Kabbalat Shabbat",
-      shabbos: "Varies by week - check bulletin"
+      mondayToFriday: "1:30 PM, 3:00 PM (Winter), 7:30 PM (Summer)",
+      shabbos: "Following the Kiddush"
     },
     maariv: {
       sunday: "After Mincha, 9:15 PM",
-      mondayToThursday: "After Mincha, 9:15 PM",
-      friday: "After Kabbalat Shabbat",
-      shabbos: "Varies by week - check bulletin"
+      mondayToFriday: "After Mincha, 9:15 PM",
+      shabbos: "N/A"
     },
+  
     shabbos: {
-      candleLighting: "18 minutes before sunset",
-      kabbalatShabbat: "10 minutes after candle lighting",
-      shachris: "9:30 AM",
-      mincha: "Varies by week - check bulletin",
-      maariv: "50 minutes after sunset",
-      havdalah: "42 minutes after sunset"
-    }
-  },
-  {
-    id: "bty",
-    name: "Bais tzvi Yosef",
-    address: "667 Eastern Parkway, Brooklyn, NY 11213",
-    imageUrl: "https://images.unsplash.com/photo-1594835898177-dd82f11e7a9e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
-    website: "https://www.oholeitorah.com",
-    phone: "(718) 493-3996",
-    rabbi: "Rabbi Yisroel Belsky",
-    shachris: {
-      sunday: "7:30 AM, 8:30 AM, 9:30 AM",
-      mondayToThursday: "7:00 AM, 8:00 AM",
-      friday: "7:00 AM, 8:00 AM",
-      shabbos: "9:30 AM"
-    },
-    mincha: {
-      sunday: "1:30 PM, 3:00 PM (Winter), 7:30 PM (Summer)",
-      mondayToThursday: "1:30 PM, 3:00 PM (Winter), 7:30 PM (Summer)",
-      friday: "Before Kabbalat Shabbat",
-      shabbos: "Varies by week - check bulletin"
-    },
-    maariv: {
-      sunday: "After Mincha, 9:15 PM",
-      mondayToThursday: "After Mincha, 9:15 PM",
-      friday: "After Kabbalat Shabbat",
-      shabbos: "Varies by week - check bulletin"
-    },
-    shabbos: {
-      candleLighting: "18 minutes before sunset",
-      kabbalatShabbat: "10 minutes after candle lighting",
-      shachris: "9:30 AM",
-      mincha: "Varies by week - check bulletin",
-      maariv: "50 minutes after sunset",
-      havdalah: "42 minutes after sunset"
+      kabbalatShabbat: "Tzais",
+      shachris: "10:30 AM",
+      mincha: "N/A",
+      farbrengen: "After Mussaf"
     }
   }
 ];
